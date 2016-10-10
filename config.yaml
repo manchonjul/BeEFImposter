@@ -8,7 +8,7 @@
 beef:
     version: '0.4.7.0-alpha'
     # More verbose messages (server-side)
-    debug: false
+    debug: true
     # More verbose messages (client-side)
     client_debug: true
     # Used for generating secure tokens
@@ -33,7 +33,7 @@ beef:
         # NOTE: A poll timeout of less than 5,000 (ms) might impact performance
         #  when hooking lots of browsers (50+).
         # Enabling WebSockets is generally better (beef.websocket.enable)
-        xhr_poll_timeout: 1000
+        xhr_poll_timeout: 5000
 
         # Host Name / Domain Name
         # If you want BeEF to be accessible via hostname or domain name (ie, DynDNS),
