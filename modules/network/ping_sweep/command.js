@@ -91,7 +91,7 @@ beef.execute(function() {
     var port = Math.floor(Math.random() * 5000) + 60000;
     worker.queue('var start_time = new Date().getTime();' +
       'beef.net.cors.request(' +
-        '"GET", "http://'+ip+':'+port+'/", "", '+timeout+', function(response) {' +
+        '"GET", "https://'+ip+':'+port+'/", "", '+timeout+', function(response) {' +
           'var current_time = new Date().getTime();' +
           'var duration = current_time - start_time;' +
           'if (duration < '+timeout+') {' +
