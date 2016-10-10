@@ -1,0 +1,17 @@
+{"name": "Airgap Jumper Test",
+  "author": "xntrik",
+  "browser": ["FF", "C"],
+  "browser_version": "ALL",
+  "os": "ALL",
+  "os_version": "ALL",
+  "modules": [
+    {"name": "airgap_jumper",
+      "condition": null,
+      "code": null,
+      "options": {}
+    }
+  ],
+  "execution_order": [0],
+  "execution_delay": [0],
+  "chain_mode": "nested-forward"
+}
