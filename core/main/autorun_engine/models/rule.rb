@@ -25,6 +25,7 @@ module BeEF
           property :execution_order, Text                            # command module execution order
           property :execution_delay, Text                            # command module time delays
           property :chain_mode, String, :length => 40                 # rule chaining mode
+          property :stealth_mode, Integer, :default => 1             # stealth mode
 
           has n, :executions
         end

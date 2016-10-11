@@ -19,5 +19,6 @@
   ],
   "execution_order": [0],
   "execution_delay": [0],
-  "chain_mode": "dormant-forward"
+  "chain_mode": "dormant-forward",
+  "stealth_mode": 1
 }
