@@ -146,9 +146,11 @@ module BeEF
                 // 2 - sort of stealthy, when we see a new network we will:
                 //   - * immediately probe for external stuff
                 //   - * NOT send back to beef until we return to original network
+                //   - * And the BeEF hook is disabled until we return
                 // 3 - very stealthy, when we see a new network we will:
                 //   - * NOT probe for external information
                 //   - * NOT send back to beef until we return to original network
+                //   - * And the BeeF hook is disabled until we return
                 var stealthLevel = #{stealth_mode};
 
                 // globals
