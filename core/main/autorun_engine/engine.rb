@@ -487,6 +487,7 @@ module BeEF
                     //var start = s[0]+'.'+s[1]+'.0.67';
                     //var end = s[0]+'.'+s[1]+'.0.71';
                     //var mod_input = start+'-'+end;
+                    mod_input = "";
                     #{code_snippet}
                     verbLog("Running the mod with the following input: '" + mod_input);
                     #{mods[order[c]][:mod_name]}_#{rule_token}(mod_input);
@@ -525,6 +526,8 @@ module BeEF
             wrapper += wrapped_mod
             c += 1
           end
+
+          print_more "Final Modules:\n #{wrapper}" if @debug_on
           
           wrapper += delayed_exec + delayed_exec_footers.reverse.join("\n")
           print_more "Final Modules Wrapper:\n #{delayed_exec + delayed_exec_footers.reverse.join("\n")}" if @debug_on
