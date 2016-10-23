@@ -5,15 +5,11 @@
   "os": "ALL",
   "os_version": "ALL",
   "modules": [
-    {"name": "get_http_servers",
+    {"name": "prompt_dialog",
       "condition": null,
-      "code": "var s=outer_sequential_mod_output.split('.');var start = s[0]+'.'+s[1]+'.0.68'; var end = s[0]+'.'+s[1]+'.0.70'; var mod_input = start+'-'+end;",
+      "code": "",
       "options": {
-        "rhosts":"<<mod_input>>",
-        "ports":"80,8080,8081",
-        "threads":"3",
-        "wait":"5",
-        "timeout":"10"
+        "question":"You seem to have changed network?"
       }
     }
   ],
