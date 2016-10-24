@@ -4,7 +4,7 @@
 // See the file 'doc/COPYING' for copying permission
 //
 
-beef.are-dormant = {
+beef.aredormant = {
     verbLogEnabled: true,
     saveLocal: false,
     onlineStatus: false,
@@ -346,4 +346,4 @@ beef.are-dormant = {
     } // end of setupPhase()
 
 };
-beef.regCmp("beef.are-dormant");
+beef.regCmp("beef.aredormant");
