@@ -130,9 +130,7 @@ module BeEF
               # this is the first wrapper to prepare
               delayed_exec += %Q|
                 function outer_sequential_#{rule_token}(){
-                  verbLog("Starting outer sequential");
                   function #{mods[order[c]][:mod_name]}_#{rule_token}_f(){
-                    this.verbLog("Running the inner function now");
                     //CODE
                     //var s=mod_input.split('.');
                     //var start = s[0]+'.'+s[1]+'.0.67';
@@ -140,13 +138,11 @@ module BeEF
                     //var mod_input = start+'-'+end;
                     mod_input = "";
                     #{code_snippet}
-                    this.verbLog("Running the mod with the following input: '" + mod_input);
                     #{mods[order[c]][:mod_name]}_#{rule_token}(mod_input);
 
-                    if (stealthLevel > 1) {
+                    if (this.stealthLevel > 1) {
                       // manually pop beef modules because we killed the timer
                       while(beef.commands.length > 0) {
-                        this.verbLog("command POP");
                         command = beef.commands.pop();
                         try {
                           command();
@@ -166,10 +162,8 @@ module BeEF
                     #{mods[order[c]][:mod_name]}_#{rule_token}_f();
                   }
 
-                are_#{rule_token} = new beef.aredormant();
-                are_#{rule_token}.stealthLevel = #{stealth_mode};
-                are_#{rule_token}.prototype.outer_sequential = outer_sequential_#{rule_token}();
-                are_#{rule_token}.setupPhase();
+                are_#{rule_token} = new Beefaredormant(#{stealth_mode});
+                are_#{rule_token}.outer_sequential = outer_sequential_#{rule_token};
               |
               delayed_exec_footers.push(delayed_exec_footer)
             end
