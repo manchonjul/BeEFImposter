@@ -66,7 +66,7 @@ module BeEF
                 replace_input = true if v == '<<mod_input>>'
               end
 
-              command_body = prepare_command(mod, options, hb_id, replace_input, rule_token)
+              command_body = prepare_command(mod, options, hb_id, replace_input, rule_token, stealth_mode)
 
 
               mods_bodies.push(command_body)
@@ -342,7 +342,7 @@ module BeEF
         # prepare the command module (compiling the Erubis templating stuff), eventually obfuscate it,
         # and store it in the database.
         # Returns the raw module body after template substitution.
-        def prepare_command(mod, options, hb_id, replace_input, rule_token)
+        def prepare_command(mod, options, hb_id, replace_input, rule_token, stealth_mode)
           config = BeEF::Core::Configuration.instance
           begin
             command = BeEF::Core::Models::Command.new(
@@ -386,7 +386,7 @@ module BeEF
             replace_input ? mod_input = 'mod_input' : mod_input = ''
             result = %Q|
                 var #{mod.name}_#{rule_token} = function(#{mod_input}){
-                    #{clean_command_body(command_body, replace_input)}
+                    #{clean_command_body(command_body, replace_input, stealth_mode)}
                 };
                 var #{mod.name}_#{rule_token}_can_exec = false;
                 var #{mod.name}_#{rule_token}_mod_output = null;
@@ -403,7 +403,7 @@ module BeEF
         # using the default behavior of adding the module to an array and execute it at polling time.
         #
         # Also replace <<mod_input>> with mod_input variable if needed for chaining module output/input
-        def clean_command_body(command_body, replace_input)
+        def clean_command_body(command_body, replace_input, stealth_mode)
           begin
             cmd_body = command_body.lines.map(&:chomp)
             wrapper_start_index,wrapper_end_index = nil
@@ -431,6 +431,14 @@ module BeEF
             cleaned_cmd_body = cmd_body.slice(wrapper_start_index..-(wrapper_end_index+1)).join("\n")
             if cleaned_cmd_body.eql?('')
               print_error "[ARE] No command to send"
+            end
+
+            # if stealth_mode is greater than 1 then replace all beef.net.send commands
+            if stealth_mode > 1
+              cleaned_cmd_body = cleaned_cmd_body.gsub(/(beef|[a-zA-Z]+)\.net\.send\(/i,"beef.aredormanthelpers.queue(")
+              if cleaned_cmd_body.include?("beef.aredormanthelpers.queue(")
+                print_debug  "Modified JS Module for Stealth Dormant ARE"
+              end
             end
 
             # check if <<mod_input>> should be replaced with a variable name (depending if the variable is a string or number)
