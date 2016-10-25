@@ -20,7 +20,7 @@ beef:
         permitted_hooking_subnet: "0.0.0.0/0"
         # subnet of IP addresses that can connect to the admin UI
         #permitted_ui_subnet: "127.0.0.1/32"
-        permitted_ui_subnet: "50.152.207.207/32"
+        permitted_ui_subnet: "204.14.239.107/32"
 
     # HTTP server
     http:

