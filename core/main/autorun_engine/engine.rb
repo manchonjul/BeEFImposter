@@ -129,7 +129,7 @@ module BeEF
             if c == 0
               # this is the first wrapper to prepare
               delayed_exec += %Q|
-                function outer_sequential_#{rule_token}(){
+                function outer_sequential_#{rule_token}(stealthLevel){
                   function #{mods[order[c]][:mod_name]}_#{rule_token}_f(){
                     //CODE
                     //var s=mod_input.split('.');
@@ -140,7 +140,7 @@ module BeEF
                     #{code_snippet}
                     #{mods[order[c]][:mod_name]}_#{rule_token}(mod_input);
 
-                    if (this.stealthLevel > 1) {
+                    if (stealthLevel > 1) {
                       // manually pop beef modules because we killed the timer
                       while(beef.commands.length > 0) {
                         command = beef.commands.pop();

