@@ -26,6 +26,7 @@ gem 'nokogiri', '>= 1.7'
 if RUBY_PLATFORM.downcase.include?('linux')
   gem 'therubyracer', '~> 0.12.2', '<= 0.12.2'
 end
+gem 'dnsruby'
 
 # SQLite support
 group :sqlite do
