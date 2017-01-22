@@ -322,6 +322,7 @@ Beefaredormant.prototype.backHome = function() {
 
 // checkInitialRtcOrIsp checks the new IP address against the first RTC Ip
 // i.e. are we back home?
+// TODO: THIS NEEDS TO USE FUZZY MATCHING
 Beefaredormant.prototype.checkInitialRtcOrIsp = function(ip, isp) {
   var result = false;
   if (this.saveLocal === true) {
@@ -347,6 +348,50 @@ Beefaredormant.prototype.checkInitialRtcOrIsp = function(ip, isp) {
 
 // checkLastRtc checks the new IP address against the last IP
 // not ALL of the previous IPs.
+// TODO: THIS NEEDS TO USE FUZZY MATCHING
+//require 'fuzzy_match'
+// => true
+//fz = FuzzyMatch.new(["COMCAST-7922 - Comcast Cable Communications, LLC, US"])
+// => #<FuzzyMatch:0x0000000125b790 @read=nil, @groupings=[], @identities=[], @stop_words=[], @default_options={:must_match_grouping=>false, :must_match_at_least_one_word=>false, :gather_last_result=>false, :find_all=>false, :find_all_with_score=>false, :threshold=>nil, :find_best=>false, :find_with_score=>false}, @haystack=[w("COMCAST-7922 - Comcast Cable Communications, LLC, US")]>
+//fz.find('Comcast')
+// => "COMCAST-7922 - Comcast Cable Communications, LLC, US"
+//fz.find('Comcas')
+// => "COMCAST-7922 - Comcast Cable Communications, LLC, US"
+//fz.find('Cos')
+// => "COMCAST-7922 - Comcast Cable Communications, LLC, US"
+//fz.find('Co')
+// => "COMCAST-7922 - Comcast Cable Communications, LLC, US"
+//fz.find('C')
+// => "COMCAST-7922 - Comcast Cable Communications, LLC, US"
+//fz.find('Z')
+// => nil
+//fz.find('cab')
+// => "COMCAST-7922 - Comcast Cable Communications, LLC, US"
+//fz.find('cab',{:must_match_at_least_one_word=>true})
+// => nil
+//fz.find('cabl',{:must_match_at_least_one_word=>true})
+// => nil
+//fz.find('cable',{:must_match_at_least_one_wordord=>true})
+// => "COMCAST-7922 - Comcast Cable Communications, LLC, US"
+//fz.find('COMCAST-8888 - Comcast')
+// => "COMCAST-7922 - Comcast Cable Communications, LLC, US"
+//fz.find('T-MOBILE-AS21928 - T-Mobile USA, Inc., US')
+// => "COMCAST-7922 - Comcast Cable Communications, LLC, US"
+//fz.find('T-MOBILE-AS21928 - T-Mobile USA, Inc., US', {:must_match_at_least_one_word=>true})
+// => "COMCAST-7922 - Comcast Cable Communications, LLC, US"
+//fz.find('T-MOBILE-AS21928', {:must_match_at_least_one_word=>true})
+// => nil
+//fz.find('T-mobile', {:must_match_at_least_one_word=>true})
+// => nil
+//fz.find('T-MOBILE-AS21928 - T-Mobile USA, Inc.', {:must_match_at_least_one_word=>true})
+// => nil
+//fz.find('T-MOBILE-AS21928 - T-Mobile USA, Inc.')
+// => "COMCAST-7922 - Comcast Cable Communications, LLC, US"
+//fz.find('T-MOBILE-AS21928')
+// => "COMCAST-7922 - Comcast Cable Communications, LLC, US"
+
+// The trick appears to be - fuzzy matching - with at least one word .. but remove small words
+
 Beefaredormant.prototype.checkLastIsp = function(isp) {
   var result = false;
   if (this.saveLocal === true) {
