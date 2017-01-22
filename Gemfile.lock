@@ -24,6 +24,7 @@ GEM
     dm-sqlite-adapter (1.2.0)
       dm-do-adapter (~> 1.2.0)
       do_sqlite3 (~> 0.10.6)
+    dnsruby (1.60.0)
     do_sqlite3 (0.10.17)
       data_objects (= 0.10.17)
     em-websocket (0.5.1)
@@ -109,6 +110,7 @@ DEPENDENCIES
   dm-migrations
   dm-serializer
   dm-sqlite-adapter
+  dnsruby
   em-websocket
   erubis
   espeak-ruby (>= 1.0.4)
