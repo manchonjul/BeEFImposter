@@ -156,7 +156,9 @@ Beefaredormant.prototype.getExternalDetails = function(completion) {
           completion(xhttp3.responseText);
       }
   };
-  xhttp3.open("GET", "http://ip-api.com/json?rnd="+Date.now(), true);
+  // xhttp3.open("GET", "http://ip-api.com/json?rnd="+Date.now(), true);
+  // xhttp3.open("GET", "http://ip-api.com/json", true);
+  xhttp3.open("GET",beef.net.httpproto+"://"+beef.net.host+":"+beef.net.port+"/aslookup", true);
   xhttp3.send(); 
 }
 
@@ -233,11 +235,11 @@ Beefaredormant.prototype.presenceCheck = function() {
             // @BUG - RTC doesn't seem to poll back properly??
 
             this.getExternalDetails(function(b) {
-              if (this.checkLastIsp(JSON.parse(b).isp)) {
+              if (this.checkLastIsp(JSON.parse(b).asn)) {
                 // rtc and isphasn't changed
                 this.verbLog("rtc and ISP hasn't changed since last");
                 this.verbLog("Compared " + e + " to " + localStorage.getItem('rtc_'+this.netcount));
-                this.verbLog("Compared " + JSON.parse(b).isp + " to " + localStorage.getItem('isp_'+this.netcount));
+                this.verbLog("Compared " + JSON.parse(b).asn + " to " + localStorage.getItem('isp_'+this.netcount));
                 this.onlineStatus = freshOnlineStatus;
 
                 this.startTimers();
@@ -246,10 +248,10 @@ Beefaredormant.prototype.presenceCheck = function() {
                 this.verbLog("rtc is the same, but we've changed ISP");
                 this.verbLog("This is some bug in detecting repeat RTC internal IPs");
                 this.verbLog("Compared " + e + " to " + localStorage.getItem('rtc_'+this.netcount));
-                this.verbLog("Compared " + JSON.parse(b).isp + " to " + localStorage.getItem('isp_'+this.netcount));
+                this.verbLog("Compared " + JSON.parse(b).asn + " to " + localStorage.getItem('isp_'+this.netcount));
                 this.onlineStatus = freshOnlineStatus;
 
-                if (this.checkInitialRtcOrIsp(e, JSON.parse(b).isp)) {
+                if (this.checkInitialRtcOrIsp(e, JSON.parse(b).asn)) {
                   this.verbLog("We are back home now .. ?");
                   this.backHome();
                 } else {
@@ -268,7 +270,7 @@ Beefaredormant.prototype.presenceCheck = function() {
             this.onlineStatus = freshOnlineStatus;
 
             this.getExternalDetails(function(b) {
-              if (this.checkInitialRtcOrIsp(e, JSON.parse(b).isp)) {
+              if (this.checkInitialRtcOrIsp(e, JSON.parse(b).asn)) {
                 this.verbLog("We are back home now...");
                 this.backHome();
               } else {
@@ -396,9 +398,9 @@ Beefaredormant.prototype.startTimers = function() {
 Beefaredormant.prototype.netRecon = function(rtcresult) {
   this.verbLog("PERFORM NETWORK RECON HERE!");
   this.getExternalDetails(function(e) {
-    this.externalIp = JSON.parse(e).query;
+    this.externalIp = JSON.parse(e).ip;
     this.rtcIps = rtcresult;
-    this.isp = JSON.parse(e).isp;
+    this.isp = JSON.parse(e).asn;
 
     this.netcount++;
 
@@ -440,8 +442,8 @@ Beefaredormant.prototype.setupPhase = function() {
   this.getRtcIp(function(e) {
     this.rtcIps = e;
     this.getExternalDetails(function(e) {
-      this.externalIp = JSON.parse(e).query;
-      this.isp = JSON.parse(e).isp;
+      this.externalIp = JSON.parse(e).ip;
+      this.isp = JSON.parse(e).asn;
 
       this.printStatus(true);
 
