@@ -4,6 +4,9 @@
 // See the file 'doc/COPYING' for copying permission
 //
 
+// TODO: Why do I use localStorage in this? I mean, I just use JS memory :/
+// Is the idea to recover from localStorage in particular circumstances?
+
 function Beefaredormant(stealth) {
     this.verbLogEnabled = true;
     this.saveLocal = false;
@@ -30,6 +33,26 @@ function Beefaredormant(stealth) {
 
     // outer wrapping function on netrecon
     // this.prototype.outer_sequential = outer;
+
+    //Fusejs.io - setting options
+    this.fuseoptions = {
+      include: ["score"],
+      tokenize: true,
+      matchAllTokens: true,
+      threshold: 0.6,
+      location: 0,
+      distance: 100,
+      maxPatternLength: 32,
+      minMatchCharLength: 3,
+      keys: [
+        "title",
+        "shorttitle"
+      ]
+    };
+
+    //Fuse - first and full network lists
+    this.fusefirst = [];
+    this.fuseall = [];
 
     // globals
     this.agTimer = null;
@@ -185,6 +208,25 @@ Beefaredormant.prototype.saveState = function(saveLocal, id, online, rtc, ip, is
     localStorage.setItem('isp_'+id, isp);
     localStorage.setItem('ts_'+id, Date.now());
   } // else ? what then?
+
+  //lets build up our fuse lists
+  let astitle = isp;
+  let asshort = "";
+  if (isp.indexOf(" - ") !== -1) {
+    // we have a split
+    astitle = isp.split(/ - (.+)/)[1]
+    asshort = isp.split(" - ")[0]
+  }
+
+  let asn = {title: astitle, shorttitle: asshort, id: id};
+  this.fuseall.push(asn); // we'll keep on building these up
+
+  if (id === 0) {
+    // this is the first - lets setup the first fuse
+    asn = {title: astitle, shorttitle: asshort};
+    this.fusefirst.push(asn); // this is the only time we do this
+  }
+
 }
 
 // This tries to figure out where we are
