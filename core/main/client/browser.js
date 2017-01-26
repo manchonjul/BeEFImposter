@@ -1390,6 +1390,21 @@ beef.browser = {
         return (!window.webkitPerformance && window.navigator.appVersion.match(/CriOS\/(\d+)\./)) && ((parseInt(window.navigator.appVersion.match(/CriOS\/(\d+)\./)[1], 10) == 55) ? true : false);
     },
     /**
+     * Returns true if Chrome 56.
+     * @example: beef.browser.isC56()
+     */
+    isC56: function () {
+        return (!!window.chrome && !!window.fetch && !window.webkitPerformance && window.navigator.appVersion.match(/Chrome\/(\d+)\./)) && ((parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10) == 56) ? true : false);
+    },
+
+    /**
+     * Returns true if Chrome for iOS 56.
+     * @example: beef.browser.isC56iOS()
+     */
+    isC56iOS: function () {
+        return (!window.webkitPerformance && window.navigator.appVersion.match(/CriOS\/(\d+)\./)) && ((parseInt(window.navigator.appVersion.match(/CriOS\/(\d+)\./)[1], 10) == 56) ? true : false);
+    },
+    /**
      * Returns true if Chrome.
      * @example: beef.browser.isC()
      */
