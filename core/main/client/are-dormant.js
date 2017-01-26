@@ -269,16 +269,18 @@ Beefaredormant.prototype.presenceCheck = function() {
         this.startTimers();
       } else {
         // we are now online from offline
+        // this is where things get interesting - i.e. are we on a different network?
         this.verbLog("we are back online!..");
         this.verbLog("do checks here..");
 
         this.getRtcIp(function(e) {
           if (this.checkLastRtc(e)) {
+            // Our internal IP is EXACTLY the same
             // @BUG - RTC doesn't seem to poll back properly??
 
             this.getExternalDetails(function(b) {
               if (this.checkLastIsp(JSON.parse(b).asn)) {
-                // rtc and isphasn't changed
+                // rtc and isp hasn't changed
                 this.verbLog("rtc and ISP hasn't changed since last");
                 this.verbLog("Compared " + e + " to " + localStorage.getItem('rtc_'+this.netcount));
                 this.verbLog("Compared " + JSON.parse(b).asn + " to " + localStorage.getItem('isp_'+this.netcount));
@@ -287,6 +289,7 @@ Beefaredormant.prototype.presenceCheck = function() {
                 this.startTimers();
               } else {
                 // rtc is the same, ISP has changed - this is that BUG!
+                // Or is it? Do we need to do a fuzzy match?
                 this.verbLog("rtc is the same, but we've changed ISP");
                 this.verbLog("This is some bug in detecting repeat RTC internal IPs");
                 this.verbLog("Compared " + e + " to " + localStorage.getItem('rtc_'+this.netcount));
@@ -305,7 +308,8 @@ Beefaredormant.prototype.presenceCheck = function() {
 
 
 
-          } else {
+          } else { //checkLastRTC
+            // Our internal IP is different (even slightly)
             // check how different the IP is
             this.verbLog("We were: " + localStorage.getItem('rtc_'+this.netcount));
             this.verbLog("We are now: " + e);
@@ -366,29 +370,44 @@ Beefaredormant.prototype.backHome = function() {
 // i.e. are we back home?
 // TODO: THIS NEEDS TO USE FUZZY MATCHING
 Beefaredormant.prototype.checkInitialRtcOrIsp = function(ip, isp) {
+  this.verbLog("Checking initial IP or ISP...");
   var result = false;
   if (this.saveLocal === true) {
     if (ip.toUpperCase() === localStorage.getItem('rtc_0').toUpperCase()) {
+      this.verbLog("ip is exactly the same");
       result = true;
     }
 
     if (isp.toUpperCase() === localStorage.getItem('isp_0').toUpperCase()) {
+      this.verbLog("ISP is exactly the same");
       result = true;
     }
-    // @BUG - this won't work as it's async duh
-    // It appears that RTC is unable to detect the change back, so lets run the external check and compare
-    // this.getExternalDetails(function(e) {
-    //   if (JSON.parse(e).isp.toUpperCase() === localStorage.getItem('isp_0').toUpperCase()) {
-    //       result = true;
-    //   }
-    //
-    // }.bind(this));
+
+    if (result === false) {
+      this.verbLog("Neither IP or ISP are exactly the same - fuzzy matching..");
+      
+      // time for fuzzy matching?
+
+      // first lets only allow particular characters
+      let shortisp = isp.replace(/[^a-zA-Z0-9-_]/,'');
+      // shorten
+      shortisp = shortisp.substring(0,32);
+      let fuse = new Fuse(this.fusefirst, this.fuseoptions);
+      let fuseresult = fuse.search(shortisp);
+
+      if (fuseresult.length > 0) {
+        this.verbLog("Fuzzy match HIT");
+        // we have a fuzzy match
+        // do we care *how* much of a match?
+        result = true;
+      }
+    }
   }
 
   return result;
 }
 
-// checkLastRtc checks the new IP address against the last IP
+// checkLastIsp checks the new isp attributes against the last
 // not ALL of the previous IPs.
 // The removed comments were for a fuzzy matching logic in ruby - I'm an idiot and forgot this was JS (It was late and I was drinking fuck you)
 // The trick appears to be - fuzzy matching - with at least one word .. but remove small words
@@ -406,6 +425,7 @@ Beefaredormant.prototype.checkLastIsp = function(isp) {
 
 // checkLastRtc checks the new IP address against the last IP
 // not ALL of the previous IPs.
+// TODO: This doesn't do *any* smart sub-class matching. Just direct IP matching
 Beefaredormant.prototype.checkLastRtc = function(ip) {
   var result = false;
   if (this.saveLocal === true) {
