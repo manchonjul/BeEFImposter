@@ -48,6 +48,7 @@ module BeEF
             execution_delay = JSON.parse(rule.execution_delay)
             chain_mode  = rule.chain_mode
             stealth_mode = rule.stealth_mode
+            dormant_end_mode = rule.dormant_end_mode
 
             mods_bodies = Array.new
             mods_codes = Array.new
@@ -81,7 +82,7 @@ module BeEF
               when 'sequential'
                 wrapper = prepare_sequential_wrapper(mods_bodies, execution_order, execution_delay, rule_token)
               when 'dormant-forward'
-                wrapper = prepare_dormant_forward_wrapper(mods_bodies, mods_codes, mods_conditions, execution_order, rule_token, stealth_mode)
+                wrapper = prepare_dormant_forward_wrapper(mods_bodies, mods_codes, mods_conditions, execution_order, rule_token, stealth_mode, dormant_end_mode)
               else
                 wrapper = nil
                 print_error "Chain mode looks wrong!"
@@ -104,7 +105,7 @@ module BeEF
         end
 
 
-        def prepare_dormant_forward_wrapper(mods, code, conditions, order, rule_token, stealth_mode)
+        def prepare_dormant_forward_wrapper(mods, code, conditions, order, rule_token, stealth_mode, dormant_end_mode)
           wrapper = ''
           delayed_exec = ''
           delayed_exec_footers = Array.new
@@ -162,7 +163,7 @@ module BeEF
                     #{mods[order[c]][:mod_name]}_#{rule_token}_f();
                   }
 
-                are_#{rule_token} = new Beefaredormant(#{stealth_mode});
+                are_#{rule_token} = new Beefaredormant(#{stealth_mode}, #{dormant_end_mode});
                 are_#{rule_token}.outer_sequential = outer_sequential_#{rule_token};
               |
               delayed_exec_footers.push(delayed_exec_footer)

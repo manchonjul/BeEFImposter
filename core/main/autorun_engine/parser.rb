@@ -21,8 +21,9 @@ module BeEF
         CHAIN_MODE = ['sequential','nested-forward','dormant-forward']
         MAX_VER_LEN = 15
         STEALTH_MODE = [1,2,3]
+        DORMANT_END_MODE = [0,1]
         # Parse a JSON ARE file and returns an Hash with the value mappings
-        def parse(name,author,browser, browser_version, os, os_version, modules, exec_order, exec_delay, chain_mode, stealth_mode)
+        def parse(name,author,browser, browser_version, os, os_version, modules, exec_order, exec_delay, chain_mode, stealth_mode, dormant_end_mode)
           begin
             success = [true]
 
@@ -30,6 +31,7 @@ module BeEF
             return [false, 'Illegal rule name'] unless BeEF::Filters.is_non_empty_string?(name)
             return [false, 'Illegal author name'] unless BeEF::Filters.is_non_empty_string?(author)
             return [false, 'Illegal stealth mode'] unless STEALTH_MODE.include?(stealth_mode)
+            return [false, 'Illegal dormant end mode'] unless DORMANT_END_MODE.include?(dormant_end_mode)
             # if multiple browsers were specified, check each browser
             if browser.kind_of?(Array)
               browser.each do |b|

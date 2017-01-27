@@ -25,7 +25,8 @@ module BeEF
           property :execution_order, Text                            # command module execution order
           property :execution_delay, Text                            # command module time delays
           property :chain_mode, String, :length => 40                 # rule chaining mode
-          property :stealth_mode, Integer, :default => 1             # stealth mode
+          property :stealth_mode, Integer, :default => 1             # stealth mode (used by Dormant DOM)
+          property :dormant_end_mode, Integer, :default => 0         # whether the module will stop after returning home or not (used by Dormant DOM)
 
           has n, :executions
         end
