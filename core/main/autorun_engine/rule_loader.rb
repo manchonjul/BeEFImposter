@@ -31,9 +31,10 @@ module BeEF
             exec_delay = data['execution_delay']
             chain_mode = data['chain_mode']
             stealth_mode = data['stealth_mode']||1
+            dormant_end_mode = data['dormant_end_mode']||0
 
             parser_result = BeEF::Core::AutorunEngine::Parser.instance.parse(
-                name,author,browser,browser_version,os,os_version,modules,exec_order,exec_delay,chain_mode,stealth_mode)
+                name,author,browser,browser_version,os,os_version,modules,exec_order,exec_delay,chain_mode,stealth_mode,dormant_end_mode)
 
             if parser_result.length == 1 && parser_result.first
               print_info "[ARE] Ruleset (#{name}) parsed and stored successfully."
@@ -54,6 +55,7 @@ module BeEF
                 print_more "Exec order: #{exec_order}"
                 print_more "Exec delay: #{exec_delay}"
                 print_more "Stealth mode: #{stealth_mode}" unless stealth_mode.nil?
+                print_more "Dormant module end mode: #{dormant_end_mode}" unless dormant_end_mode.nil?
 
               end
               are_rule = BeEF::Core::AutorunEngine::Models::Rule.new(
@@ -67,7 +69,8 @@ module BeEF
                   :execution_order => exec_order,
                   :execution_delay => exec_delay,
                   :chain_mode => chain_mode,
-                  :stealth_mode => stealth_mode)
+                  :stealth_mode => stealth_mode,
+                  :dormant_end_mode => dormant_end_mode)
               are_rule.save
               return { 'success' => true, 'rule_id' => are_rule.id}
             else

