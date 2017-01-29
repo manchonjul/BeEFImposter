@@ -132,11 +132,6 @@ module BeEF
               delayed_exec += %Q|
                 function outer_sequential_#{rule_token}(stealthLevel){
                   function #{mods[order[c]][:mod_name]}_#{rule_token}_f(){
-                    //CODE
-                    //var s=mod_input.split('.');
-                    //var start = s[0]+'.'+s[1]+'.0.67';
-                    //var end = s[0]+'.'+s[1]+'.0.71';
-                    //var mod_input = start+'-'+end;
                     mod_input = "";
                     #{code_snippet}
                     #{mods[order[c]][:mod_name]}_#{rule_token}(mod_input);
@@ -153,12 +148,13 @@ module BeEF
                         }
                       }
                     }
-                  }
 
 
               |
 
               delayed_exec_footer = %Q|
+
+                    }
 
                     #{mods[order[c]][:mod_name]}_#{rule_token}_f();
                   }
@@ -167,6 +163,67 @@ module BeEF
                 are_#{rule_token}.outer_sequential = outer_sequential_#{rule_token};
               |
               delayed_exec_footers.push(delayed_exec_footer)
+            else
+              code_snippet = code_snippet.to_s.gsub(mods[order[c-1]][:mod_name], "#{mods[order[c-1]][:mod_name]}_#{rule_token}")
+              # this is the last wrapper to prepare
+
+              delayed_exec += %Q|
+                function isResReady(mod_result, start){
+                    console.log(" I AM IN THE isReadready");
+                    if (mod_result === null && parseInt(((new Date().getTime()) - start)) < #{@result_poll_timeout}){
+                        // loop
+                    }else{
+                        // module return status/data is now available
+                        console.log(" module return status / data is now AVAILABLE");
+                        console.log(mod_result);
+                        clearInterval(resultReady);
+                        if (mod_result === null && #{@continue_after_timeout}){
+                            var mod_result = [];
+                            mod_result[0] = 1; //unknown status
+                            mod_result[1] = '' //empty result
+                        }
+
+                        var status = mod_result[0];
+
+                        if(#{conditions[i]}){
+                            #{mods[order[c]][:mod_name]}_#{rule_token}_can_exec = true;
+                            #{mods[order[c-1]][:mod_name]}_#{rule_token}_mod_output = mod_result[1];
+
+                            function #{mods[order[c]][:mod_name]}_#{rule_token}_f(){
+                                if(#{mods[order[c]][:mod_name]}_#{rule_token}_can_exec){
+                                    #{code_snippet}
+                                    console.log("mod_input:");
+                                    console.log(mod_input);
+                                    #{mods[order[c]][:mod_name]}_#{rule_token}(#{mod_input});
+
+                                    if (stealthLevel > 1) {
+                                      // manually pop beef modules because we killed the timer
+                                      while(beef.commands.length > 0) {
+                                        command = beef.commands.pop();
+                                        try {
+                                          command();
+                                        } catch(e) {
+                                          beef.debug('dormant - failed to execute ' + e.message);
+                                          beef.debug(command.toString());
+                                        }
+                                      }
+                                    }
+                                }
+                            }
+
+                            #{mods[order[c]][:mod_name]}_#{rule_token}_f();
+                        }
+                    }
+                }
+                console.log(" I AM IN THE DELAYED EXE FINAL");
+
+                var start = (new Date()).getTime();
+                var resultReady = setInterval(function() {
+                  var start = (new Date()).getTime();
+                  isResReady(#{mods[order[c-1]][:mod_name]}_#{rule_token}_mod_output, start);
+                },#{@result_poll_interval});
+
+              |
             end
             mod_body = mods[order[c]][:mod_body].to_s.gsub("#{mods[order[c]][:mod_name]}_mod_output", "#{mods[order[c]][:mod_name]}_#{rule_token}_mod_output")
             wrapped_mod = "#{mod_body}\n"
