@@ -1,0 +1,50 @@
+# Quick how-to on how to deploy BeEF on Amazon ElasticBinStalk
+
+1. copy the BeEF repo in a directory, cd into that, then clean from git
+find . -type f | grep -i "\.git" | xargs rm
+
+2. make sure Gemfile.lock is removed, then:
+
+3. git init .
+
+4. eb init
+
+5. git add .
+
+6. git commit -m "import"
+
+7. eb create beef-ebs-new (where the app name is the same as the one choosen in step 4)
+
+8. copy CNAMe from "eb status" output
+like:
+  CNAME: beef-ebs-new.pb3uk68678.us-west-2.elasticbeanstalk.com
+
+9. Use the CNAME host value in the BeEF "public" settings, uncommenting them like:
+public: "beef-ebs-new.pb3uk68678.us-west-2.elasticbeanstalk.com"
+public_port: "80"
+
+10. Persist changes
+git add config.yaml
+git commit -m "changed public settings"
+
+11. deploy changes with:
+eb deploy
+
+12. check if status is ready and green, like this:
+eb status
+Environment details for: beef-ebs-new
+  Application name: beef-ebs-new
+  Region: us-west-2
+  Deployed Version: app-c61a-170308_160046
+  Environment ID: e-ph9sf7jy3p
+  Platform: arn:aws:elasticbeanstalk:us-west-2::platform/Puma with Ruby 2.3 running on 64bit Amazon Linux/2.3.1
+  Tier: WebServer-Standard
+  CNAME: beef-ebs-new.p678687.us-west-2.elasticbeanstalk.com
+  Updated: 2017-03-08 15:01:21.287000+00:00
+  Status: Ready
+  Health: Green
+
+13. Connecting to http://beef-ebs-new.p678687.us-west-2.elasticbeanstalk.com if everything went well you will the the
+default Apache page (that's BeEF spoofing the response :-)
+
+14. With "eb logs" you can get the output of the Ruby appserver, that's where the RESTful API key is.
