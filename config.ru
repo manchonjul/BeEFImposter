@@ -56,10 +56,10 @@ require './core/main/logger'
 require './core/main/migration'
 require './core/main/console/banners'
 require './core/main/handlers/mountpoints'
-require './core/main/network_stack/handlers/redirector'
-require './core/main/network_stack/handlers/raw'
 require './core/main/network_stack/assethandler'
+
 require './core/main/router/router'
+
 require './core/main/handlers/modules/beefjs'
 require './core/main/handlers/modules/command'
 require './core/main/handlers/commands'
@@ -67,7 +67,6 @@ require './core/main/handlers/events'
 require './core/main/handlers/dyncommands'
 require './core/main/handlers/hookedbrowsers'
 require './core/main/handlers/browserdetails'
-require './core/main/network_stack/handlers/dynamicreconstruction'
 require './core/main/distributed_engine/models/rules'
 require './core/main/autorun_engine/models/rule'
 require './core/main/autorun_engine/models/execution'
@@ -153,7 +152,11 @@ BeEF::Core::AutorunEngine::RuleLoader.instance.load_directory
 
 # Core
 use BeEF::Core::Handlers::HookedBrowsers
-use BeEF::Core::NetworkStack::Handlers::DynamicReconstruction
+
+@mounts = BeEF::Core::Handlers::Mountpoints.instance
+@mounts.add_int_mountpoint('/init', BeEF::Core::Handlers::BrowserDetails)
+@mounts.add_int_mountpoint('/hook.js', BeEF::Core::Handlers::HookedBrowsers)
+@mounts.add_int_mountpoint('/event', BeEF::Core::Handlers::Events)
 
 # RESTful API
 use BeEF::Core::Rest::HookedBrowsers

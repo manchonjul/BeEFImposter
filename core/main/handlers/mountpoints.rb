@@ -11,13 +11,14 @@ module BeEF
 
         def initialize
           @internal_mount_points = {
-              '/init' => BeEF::Core::Handlers::BrowserDetails,
-              '/hook.js' => BeEF::Core::Handlers::HookedBrowsers,
-              '/event' => BeEF::Core::Handlers::Events
+              # examples:
+              # '/init' => BeEF::Core::Handlers::BrowserDetails,
+              # '/hook.js' => BeEF::Core::Handlers::HookedBrowsers,
+              # '/event' => BeEF::Core::Handlers::Events
           }
 
           @external_mount_points = {
-              # examples
+              # examples:
               # '/2.js' => Rack::Response.new(body = '2 - JS', status = 200, header = {'Content-Type' => 'text/plain'}),
               # '/3.js' => Rack::Response.new(body = '3 - JS', status = 200, header = {'Content-Type' => 'text/plain'})
           }

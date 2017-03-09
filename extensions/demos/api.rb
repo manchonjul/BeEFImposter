@@ -9,8 +9,6 @@ module Demos
 
   module RegisterHttpHandlers
 
-    BeEF::API::Registrar.instance.register(BeEF::Extension::Demos::RegisterHttpHandlers, BeEF::API::Server, 'mount_handler')
-
     def self.mount_handler(beef_server)
       # mount everything in html directory to /demos/
       path = File.dirname(__FILE__)+'/html/'
