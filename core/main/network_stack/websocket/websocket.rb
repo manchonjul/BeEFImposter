@@ -21,7 +21,7 @@ module BeEF
 
         # TODO check if below change works when re-enabling web sockets
         # MOUNTS = BeEF::Core::Server.instance.mounts
-        MOUNTS = BeEF::Core::Handlers::InternalMounts.instance.get_mountpoints
+        MOUNTS = BeEF::Core::Handlers::Mountpoints.instance.get_int_mountpoints
 
 
         def initialize

@@ -14,7 +14,7 @@ module BeEF
           # @note holds packet queue
           PQ = Array.new()
 
-          MOUNTS = BeEF::Core::Handlers::InternalMounts.instance.get_mountpoints
+          MOUNTS = BeEF::Core::Handlers::Mountpoints.instance.get_int_mountpoints
 
           before do
             # TODO this is just a PITA during DEV - implement a similar check
