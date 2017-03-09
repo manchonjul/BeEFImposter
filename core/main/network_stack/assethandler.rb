@@ -11,7 +11,6 @@ module Handlers
   # @note Class defining BeEF assets 
   class AssetHandler 
     
-    # @note call BeEF::Core::NetworkStack::Handlers::AssetHandler.instance
     include Singleton
     
     attr_reader :allocations, :root_dir
@@ -20,9 +19,7 @@ module Handlers
     def initialize
       @allocations = {}
       @sockets = {}
-
-      # TODO refactor this since we don't use anymore Server
-      @http_server = nil #BeEF::Core::Server.instance
+      @mounts = BeEF::Core::Handlers::Mountpoints.instance
       @root_dir = File.expand_path('../../../../', __FILE__)
     end
 
@@ -34,8 +31,8 @@ module Handlers
     def bind_redirect(target, path=nil)
       url = build_url(path,nil)
       @allocations[url] = {'target' => target}
-      @http_server.mount(url,BeEF::Core::NetworkStack::Handlers::Redirector.new(target))
-      @http_server.remap
+
+      @mounts.add_ext_mountpoint(url, status = 302, header = {'Content-Type' => 'text','Location' => target},'')
       print_info "Redirector to [" + target + "] bound to url [" + url + "]"
       url
     end
@@ -49,11 +46,7 @@ module Handlers
     def bind_raw(status, header, body, path=nil, count=-1)
       url = build_url(path,nil)
       @allocations[url] = {}
-      @http_server.mount(
-        url,
-        BeEF::Core::NetworkStack::Handlers::Raw.new(status, header, body)
-      )
-      @http_server.remap
+      @mounts.add_ext_mountpoint(url,status,header,body)
       print_info "Raw HTTP bound to url [" + url + "]"
       url
     end
@@ -67,11 +60,7 @@ module Handlers
     # @todo This function should accept a hooked browser session to limit the mounted file to a certain session
     def bind(file, path=nil, extension=nil, count=-1)
         url = build_url(path, extension)
-        @allocations[url] = {'file' => "#{root_dir}"+file,
-                             'path' => path,
-                             'extension' => extension,
-                             'count' => count}
-
+        @allocations[url] = {'file' => "#{root_dir}"+file, 'path' => path, 'extension' => extension, 'count' => count}
         resp_body = File.read("#{root_dir}#{file}")
 
         if extension.nil? || MIME::Types.type_for(extension).empty?
@@ -80,14 +69,8 @@ module Handlers
           content_type = MIME::Types.type_for(extension).first.content_type
         end
 
-        @http_server.mount(
-            url,
-            BeEF::Core::NetworkStack::Handlers::Raw.new('200', {'Content-Type' => content_type}, resp_body)
-        )
-
-        @http_server.remap
+        @mounts.add_ext_mountpoint(url,'200',{'Content-Type' => content_type},resp_body)
         print_info "File [#{file}] bound to Url [#{url}] using Content-type [#{content_type}]"
-
         url
     end
 
@@ -100,11 +83,7 @@ module Handlers
     # @todo This function should accept a hooked browser session to limit the mounted file to a certain session
     def bind_cached(file, path=nil, extension=nil, count=-1)
         url = build_url(path, extension)
-        @allocations[url] = {'file' => "#{root_dir}"+file,
-                             'path' => path,
-                             'extension' => extension,
-                             'count' => count}
-
+        @allocations[url] = {'file' => "#{root_dir}"+file, 'path' => path, 'extension' => extension, 'count' => count}
         resp_body = File.read("#{root_dir}#{file}")
 
         if extension.nil? || MIME::Types.type_for(extension).empty?
@@ -113,18 +92,12 @@ module Handlers
           content_type = MIME::Types.type_for(extension).first.content_type
         end
 
-        @http_server.mount(
-            url,
-            BeEF::Core::NetworkStack::Handlers::Raw.new(
-              '200', {
-                'Content-Type' => content_type,
-                'Expires' => CGI.rfc1123_date(Time.now+(60*60*24*365)) },
-              resp_body)
-        )
+        @mounts.add_ext_mountpoint(url,'200',{
+            'Content-Type' => content_type,
+            'Expires' => CGI.rfc1123_date(Time.now+(60*60*24*365)) },resp_body)
 
-        @http_server.remap
+
         print_info "File [#{file}] bound to Url [#{url}] using Content-type [#{content_type}]"
-
         url
     end
 
@@ -133,8 +106,7 @@ module Handlers
     #TODO: check why is throwing exception
     def unbind(url)
         @allocations.delete(url)
-        @http_server.unmount(url)
-        @http_server.remap
+        @mounts.delete_ext_mountpoint(url)
         print_info "Url [" + url + "] unmounted"
     end
 
@@ -223,13 +195,7 @@ module Handlers
         end
         false
     end
-   
-   private
-   @http_server
-   @allocations
-
   end
-  
 end
 end
 end

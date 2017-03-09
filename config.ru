@@ -55,10 +55,10 @@ require './core/main/crypto'
 require './core/main/logger'
 require './core/main/migration'
 require './core/main/console/banners'
+require './core/main/handlers/mountpoints'
 require './core/main/network_stack/handlers/redirector'
 require './core/main/network_stack/handlers/raw'
 require './core/main/network_stack/assethandler'
-require './core/main/handlers/mountpoints'
 require './core/main/router/router'
 require './core/main/handlers/modules/beefjs'
 require './core/main/handlers/modules/command'
@@ -153,15 +153,7 @@ BeEF::Core::AutorunEngine::RuleLoader.instance.load_directory
 
 # Core
 use BeEF::Core::Handlers::HookedBrowsers
-
-# The following is an example on how to add more public mountpoints, reachable as http(s)://beef/l/mount_path
-# BeEF::Core::Handlers::Mountpoints.instance.add_ext_mountpoint('/test.js' , '200', {'Content-Type' => 'text/html'}, '<b>LOL</B>')
-# BeEF::Core::Handlers::Mountpoints.instance.add_ext_mountpoint('/test/nested.js' , '200', {'Content-Type' => 'text/html'}, '<b>NESTED LOL</B>')
-
 use BeEF::Core::NetworkStack::Handlers::DynamicReconstruction
-
-# ext_mounts = BeEF::Core::Handlers::Mountpoints.instance.get_int_mountpoints
-# run Rack::URLMap.new(ext_mounts)
 
 # RESTful API
 use BeEF::Core::Rest::HookedBrowsers

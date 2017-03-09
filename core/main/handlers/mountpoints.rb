@@ -31,12 +31,17 @@ module BeEF
           @internal_mount_points
         end
 
+        # The AssetHandler is the class where this is called
         def add_ext_mountpoint(path , status, header, body)
           @external_mount_points[path] = Rack::Response.new(body = body, status = status, header = header)
         end
 
         def get_ext_mountpoints
           @external_mount_points
+        end
+
+        def delete_ext_mountpoint(path)
+          @external_mount_points.delete(path)
         end
 
       end
