@@ -23,6 +23,7 @@ module BeEF
         #end
 
 
+
         #TODO reset this to false for production
         configure do
           set :show_exceptions, true
@@ -341,23 +342,6 @@ module BeEF
           end
 
 
-
-       # Generic handler for mount points added at runtime
-        get '/*' do
-          req_path = request.path_info
-          ext_mounts = BeEF::Core::Handlers::Mountpoints.instance.get_ext_mountpoints
-
-          if ext_mounts[req_path] != nil
-            begin
-              ext_mounts[req_path]
-            rescue Exception => e
-              print_error "#{e.message}\n#{e.backtrace}"
-            end
-          else
-            status 404
-          end
-        end
-
           def get_mounts
             return MOUNTS
           end
@@ -415,8 +399,10 @@ module BeEF
             handler = get_param(data, 'handler')
             if (MOUNTS.has_key?(handler))
               if (MOUNTS[handler].class == Array and MOUNTS[handler].length == 2)
+                "Mounting array #{handler} with data #{data}"
                 MOUNTS[handler][0].new(data, MOUNTS[handler][1])
               else
+                "Mounting #{handler} with data #{data}"
                 MOUNTS[handler].new(data)
               end
             end

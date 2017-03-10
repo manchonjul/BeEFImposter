@@ -13,7 +13,10 @@ find . -type f | grep -i "\.git" | xargs rm
 
 6. git commit -m "import"
 
-7. eb create beef-ebs-new (where the app name is the same as the one choosen in step 4)
+7. eb create beef-ebs-new --database
+(where the app name is the same as the one choosen in step 4)
+make sure the password is at least 8 chars.
+the command will take a while since the DB needs to be spawned as well
 
 8. copy CNAMe from "eb status" output
 like:
@@ -22,6 +25,11 @@ like:
 9. Use the CNAME host value in the BeEF "public" settings, uncommenting them like:
 public: "beef-ebs-new.pb3uk68678.us-west-2.elasticbeanstalk.com"
 public_port: "80"
+
+9/b. Change the DB driver to be 'mysql-ebs'
+9/b/b. Make sure Gemfile has the following lines uncommented:
+gem 'mysql2'
+gem 'dm-mysql-adapter'
 
 10. Persist changes
 git add config.yaml

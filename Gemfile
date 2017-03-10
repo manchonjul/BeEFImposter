@@ -46,14 +46,18 @@ group :sqlite do
   gem 'dm-sqlite-adapter'
 end
 
-# PostgreSQL support
+# Amazon EBS support
+# gem 'mysql2'
+# gem 'dm-mysql-adapter'
+
+
 group :postgres do
-  #gem dm-postgres-adapter
+  #gem 'dm-postgres-adapter'
 end
 
 # MySQL support
 group :mysql do
-  #gem dm-mysql-adapter
+  #gem 'dm-mysql-adapter'
 end
 
 # Geolocation support

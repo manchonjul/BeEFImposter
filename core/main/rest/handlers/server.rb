@@ -12,7 +12,6 @@ module BeEF
         config = BeEF::Core::Configuration.instance
 
         before do
-          error 401 unless params[:token] == config.get('beef.api_token')
           # TODO READD THE PERMITTED SOURCE
           #halt 401 if not BeEF::Core::Rest.permitted_source?(request.ip)
           headers 'Content-Type' => 'application/json; charset=UTF-8',
@@ -29,6 +28,7 @@ module BeEF
         # -X POST -v http://10.0.60.10/api/server/bind?token=xyz
 
         post '/api/server/bind' do
+          error 401 unless params[:token] == config.get('beef.api_token')
           request.body.rewind
           begin
             data = JSON.parse request.body.read

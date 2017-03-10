@@ -12,8 +12,6 @@ module BeEF
         config = BeEF::Core::Configuration.instance
 
         before do
-          # TODO re-enable 401 with auth check THIS
-          error 401 unless params[:token] == config.get('beef.api_token')
           # TODO READD THE PERMITTED SOURCE
           #halt 401 if not BeEF::Core::Rest.permitted_source?(request.ip)
           headers 'Content-Type' => 'application/json; charset=UTF-8',
@@ -26,6 +24,7 @@ module BeEF
         # @note Get all available and enabled modules (id, name, category)
         #
         get '/api/modules' do
+          error 401 unless params[:token] == config.get('beef.api_token')
           mods = BeEF::Core::Models::CommandModule.all
 
           mods_hash = {}
@@ -45,6 +44,7 @@ module BeEF
         end
 
         get '/api/modules/search/:mod_name' do
+          error 401 unless params[:token] == config.get('beef.api_token')
           mod = BeEF::Core::Models::CommandModule.first(:name => params[:mod_name])
           result = {}
           if mod != nil
@@ -57,6 +57,7 @@ module BeEF
         # @note Get the module definition (info, options)
         #
         get '/api/modules/:mod_id' do
+          error 401 unless params[:token] == config.get('beef.api_token')
           cmd = BeEF::Core::Models::CommandModule.get(params[:mod_id])
           error 404 unless cmd != nil
           modk = BeEF::Module.get_key_by_database_id(params[:mod_id])
@@ -83,6 +84,7 @@ module BeEF
         #{"date":"1331637093","data":"{\"data\":\"text=michele\"}"}
         #
         get '/api/modules/:session/:mod_id/:cmd_id' do
+          error 401 unless params[:token] == config.get('beef.api_token')
           hb = BeEF::Core::Models::HookedBrowser.first(:session => params[:session])
           error 401 unless hb != nil
           cmd = BeEF::Core::Models::Command.first(:hooked_browser_id => hb.id,
@@ -139,6 +141,7 @@ module BeEF
         #{"success":"true","command_id":"not_available"}
         #
         post '/api/modules/:session/:mod_id' do
+          error 401 unless params[:token] == config.get('beef.api_token')
           hb = BeEF::Core::Models::HookedBrowser.first(:session => params[:session])
           error 401 unless hb != nil
           modk = BeEF::Module.get_key_by_database_id(params[:mod_id])
@@ -182,6 +185,7 @@ module BeEF
         #-X POST http://127.0.0.1:3000/api/modules/multi_browser?token=2316d82702b83a293e2d46a0886a003a6be0a633
         #
         post '/api/modules/multi_browser' do
+          error 401 unless params[:token] == config.get('beef.api_token')
           request.body.rewind
           begin
             body = JSON.parse request.body.read
@@ -257,6 +261,7 @@ module BeEF
         #  -X POST http://127.0.0.1:3000/api/modules/multi_module?token=e640483ae9bca2eb904f003f27dd4bc83936eb92
         #
         post '/api/modules/multi_module' do
+          error 401 unless params[:token] == config.get('beef.api_token')
           request.body.rewind
           begin
             body = JSON.parse request.body.read

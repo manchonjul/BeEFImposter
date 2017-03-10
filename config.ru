@@ -78,6 +78,7 @@ require './core/modules'
 require './core/extension'
 require './core/extensions'
 require './core/hbmanager'
+
 require './core/main/rest/handlers/admin_ui'
 require './core/main/rest/handlers/hookedbrowsers'
 require './core/main/rest/handlers/modules'
@@ -122,14 +123,35 @@ case config.get("beef.database.driver")
   when "sqlite"
     DataMapper.setup(:default, "sqlite3://#{File.expand_path('..', __FILE__)}/#{config.get("beef.database.db_file")}")
   when "mysql", "postgres"
+    print_info config.get("beef.database.driver")
+    print_info config.get("beef.database.db_host")
+    print_info config.get("beef.database.db_port")
+
     DataMapper.setup(:default,
                      :adapter => config.get("beef.database.driver"),
-                     :host => config.get("beef.database.db_host"),
+                     :host => config.get("beef.database.db_host").to_i,
                      :port => config.get("beef.database.db_port"),
                      :username => config.get("beef.database.db_user"),
                      :password => config.get("beef.database.db_passwd"),
                      :database => config.get("beef.database.db_name"),
                      :encoding => config.get("beef.database.db_encoding")
+    )
+  when "mysql-ebs"
+    host = ENV['RDS_HOSTNAME']
+    port = ENV['RDS_PORT'].to_i
+    db = ENV['RDS_DB_NAME']
+    user = ENV['RDS_USERNAME']
+    pass = ENV['RDS_PASSWORD']
+    print_info "Using MySQL on Amazon EBS: #{user}@#{host}:#{port}"
+
+    DataMapper.setup(:default,
+                     :adapter => 'mysql',
+                     :host => host,
+                     :port => port,
+                     :username => user,
+                     :password => pass,
+                     :database => db,
+                     :encoding => 'UTF-8'
     )
   else
     print_error 'No default database selected. Please add one in config.yaml'
@@ -166,6 +188,11 @@ use BeEF::Core::Rest::Logs
 use BeEF::Core::Rest::Admin
 use BeEF::Core::Rest::Server # TODO change the way dynamic mounts are added
 use BeEF::Core::Rest::AutorunEngine
+
+require './core/main/publicrouter'
+use BeEF::Core::Router::PublicRouter
+
+
 
 # Internal Handlers singleton Core
 run BeEF::Core::Handlers::Dyncommands
