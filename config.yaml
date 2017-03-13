@@ -8,7 +8,7 @@
 beef:
     version: '0.4.7.0-alpha'
     # More verbose messages (server-side)
-    debug: true
+    debug: false
     # More verbose messages (client-side)
     client_debug: false
     # Used for generating secure tokens
@@ -33,7 +33,7 @@ beef:
         # NOTE: A poll timeout of less than 5,000 (ms) might impact performance
         #  when hooking lots of browsers (50+).
         # Enabling WebSockets is generally better (beef.websocket.enable)
-        xhr_poll_timeout: 1000
+        xhr_poll_timeout: 500
 
         # Host Name / Domain Name
         # If you want BeEF to be accessible via hostname or domain name (ie, DynDNS),
@@ -47,8 +47,8 @@ beef:
         #public_port: "" # public port (experimental)
 
         # for AMAZON ElasticBeanStalk deployment, use public settings likethe following:
-        #public: "beef-amazon-ebs.jnmhk59vzq.us-west-2.elasticbeanstalk.com"   # DNS name of your app
-        #public_port: "80"                                                     # or 443
+        public: "__PLACEHOLDER__"   # DNS name of your app
+        public_port: "443"                                                     # or 443
 
 
         # Web Admin user interface URI
@@ -84,7 +84,7 @@ beef:
             hook_root: false # inject BeEF hook in the server home page
         # Experimental HTTPS support for the hook / admin / all other Thin managed web services
         https:
-            enable: false
+            enable: true
             # In production environments, be sure to use a valid certificate signed for the value
             # used in beef.http.public (the domain name of the server where you run BeEF)
             key: "beef_key.pem"
@@ -101,7 +101,7 @@ beef:
         #   gem "dm-mysql-adapter"
         # if you want to switch drivers from sqlite to postgres (or mysql).
         # Finally, run a 'bundle install' command and start BeEF.
-        driver: "sqlite"
+        driver: "mysql-ebs"
 
         # db_file is only used for sqlite
         db_file: "beef.db"

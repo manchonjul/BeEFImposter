@@ -14,7 +14,7 @@ find . -type f | grep -i "\.git" | xargs rm
 6. git commit -m "import"
 
 7. eb create beef-ebs-new --database
-(where the app name is the same as the one choosen in step 4)
+(where the app name is the same as the one chosen in step 4)
 make sure the password is at least 8 chars.
 the command will take a while since the DB needs to be spawned as well
 
@@ -35,6 +35,7 @@ gem 'dm-mysql-adapter'
 git add config.yaml
 git commit -m "changed public settings"
 
+
 11. deploy changes with:
 eb deploy
 
@@ -52,7 +53,20 @@ Environment details for: beef-ebs-new
   Status: Ready
   Health: Green
 
-13. Connecting to http://beef-ebs-new.p678687.us-west-2.elasticbeanstalk.com if everything went well you will the the
+13. Connecting to http://beef-ebs-new.p678687.us-west-2.elasticbeanstalk.com you should see the
 default Apache page (that's BeEF spoofing the response :-)
+The classic /demos/basic.html hook page is still there too!
 
 14. With "eb logs" you can get the output of the Ruby appserver, that's where the RESTful API key is.
+
+NOTE:
+If you need HTTPS in production, BeEF doesn't need to have a copy of the SSL cert and key.
+SSL is managed on the Amazon LoadBalancer, just make sure that config.yaml has the following.
+
+1. HTTPS must be enabled in a way that the client uses the right protocol handler when making request to BeEF
+ - https:
+     enable: true
+
+2. If your domain is target.com, then you will have that in the 'public' value
+ - public_port: 443
+ - public: "target.com"

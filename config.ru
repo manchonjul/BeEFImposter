@@ -137,6 +137,7 @@ case config.get("beef.database.driver")
                      :encoding => config.get("beef.database.db_encoding")
     )
   when "mysql-ebs"
+    # database settings are passed to the EBS as Environment variables, so read from there
     host = ENV['RDS_HOSTNAME']
     port = ENV['RDS_PORT'].to_i
     db = ENV['RDS_DB_NAME']
@@ -156,6 +157,30 @@ case config.get("beef.database.driver")
   else
     print_error 'No default database selected. Please add one in config.yaml'
 end
+
+# Both the 'public' value (the public domain used) and the RESTful API key are likely
+# going to be passed via Environment variables:
+
+if config.get('beef.http.public') == ('__PLACEHOLDER__')
+  beef_fqdn = ENV['BEEF_FQDN']
+  config.set('beef.http.public', beef_fqdn)
+  print_info "Using public settings coming from ENV: #{beef_fqdn}"
+end
+
+if ENV['BEEF_REST_KEY'] != nil
+  key = ENV['BEEF_REST_KEY']
+  config.set('beef.api_token', key)
+  print_info "Using RESTful API token from ENV: #{key}"
+else
+  key = BeEF::Core::Crypto::api_token
+  print_info "Generated random RESTful API token: #{key}"
+end
+
+
+rest_key = ENV['BEEF_REST_KEY']
+config.set('beef.api_token', rest_key)
+
+
 BeEF::Modules.load
 
 DataMapper.auto_migrate!
@@ -167,7 +192,6 @@ BeEF::Core::Console::Banners.print_loaded_extensions
 BeEF::Core::Console::Banners.print_loaded_modules
 BeEF::Core::Console::Banners.print_network_interfaces_count
 BeEF::Core::Console::Banners.print_network_interfaces_routes
-print_info "RESTful API key: #{BeEF::Core::Crypto::api_token}"
 
 BeEF::Core::AutorunEngine::RuleLoader.instance.load_directory
 
