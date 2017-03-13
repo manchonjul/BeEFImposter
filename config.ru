@@ -177,10 +177,6 @@ else
 end
 
 
-rest_key = ENV['BEEF_REST_KEY']
-config.set('beef.api_token', rest_key)
-
-
 BeEF::Modules.load
 
 DataMapper.auto_migrate!
