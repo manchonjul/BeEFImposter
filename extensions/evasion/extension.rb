@@ -15,9 +15,10 @@ end
 end
 end
 
-require 'extensions/evasion/evasion'
-require 'extensions/evasion/helper'
-require 'extensions/evasion/obfuscation/scramble'
-require 'extensions/evasion/obfuscation/minify'
-require 'extensions/evasion/obfuscation/base_64'
-require 'extensions/evasion/obfuscation/whitespace'
+r = File.expand_path('../', __FILE__)
+require "#{r}/evasion.rb"
+require "#{r}/helper.rb"
+require "#{r}/obfuscation/scramble.rb"
+require "#{r}/obfuscation/minify.rb"
+require "#{r}/obfuscation/base_64.rb"
+require "#{r}/obfuscation/whitespace.rb"

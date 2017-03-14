@@ -45,7 +45,7 @@ module BeEF
                #1. get the ruby module inside the obfuscation directory: the file name will be the same of the string used in "chain"
                #2. call the "execute" method of the ruby module, passing the input
                #3. update the input in order that next technique will work on the pre-processed input.
-               if File.exists?("#{$root_dir}/extensions/evasion/obfuscation/#{technique}.rb")
+               if File.exists?("#{File.expand_path('../../../', __FILE__)}/extensions/evasion/obfuscation/#{technique}.rb")
                   print_debug "[OBFUSCATION] Applying technique [#{technique}]"
                   klass = BeEF::Extension::Evasion.const_get(technique.capitalize).instance
                   @output = klass.execute(@output, @@config)
