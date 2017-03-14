@@ -47,8 +47,8 @@ beef:
         #public_port: "" # public port (experimental)
 
         # for AMAZON ElasticBeanStalk deployment, use public settings likethe following:
-        public: "__PLACEHOLDER__"   # DNS name of your app
-        public_port: "443"                                                     # or 443
+#        public: "__PLACEHOLDER__"   # DNS name of your app
+#        public_port: "443"                                                     # or 443
 
 
         # Web Admin user interface URI
@@ -84,7 +84,7 @@ beef:
             hook_root: false # inject BeEF hook in the server home page
         # Experimental HTTPS support for the hook / admin / all other Thin managed web services
         https:
-            enable: true
+            enable: false
             # In production environments, be sure to use a valid certificate signed for the value
             # used in beef.http.public (the domain name of the server where you run BeEF)
             key: "beef_key.pem"
@@ -101,7 +101,7 @@ beef:
         #   gem "dm-mysql-adapter"
         # if you want to switch drivers from sqlite to postgres (or mysql).
         # Finally, run a 'bundle install' command and start BeEF.
-        driver: "mysql-ebs"
+        driver: "sqlite"
 
         # db_file is only used for sqlite
         db_file: "beef.db"
@@ -154,7 +154,7 @@ beef:
     # You may override default extension configuration parameters here
     extension:
         requester:
-            enable: false
+            enable: true
         proxy:
             enable: false
             key: "beef_key.pem"

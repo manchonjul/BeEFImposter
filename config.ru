@@ -113,6 +113,7 @@ require './core/main/rest/api'
 # alternative app servers:
 #  Thin --> -s thin -w -p 3000
 #  Unicorn, just type (without rackup) ->  unicorn -p 3000
+# Make sure you require the right gems in the Gemfile
 
 
 BeEF::Core::Console::Banners.print_welcome_msg
@@ -195,10 +196,10 @@ BeEF::Core::AutorunEngine::RuleLoader.instance.load_directory
 # Core
 use BeEF::Core::Handlers::HookedBrowsers
 
-@mounts = BeEF::Core::Handlers::Mountpoints.instance
-@mounts.add_int_mountpoint('/init', BeEF::Core::Handlers::BrowserDetails)
-@mounts.add_int_mountpoint('/hook.js', BeEF::Core::Handlers::HookedBrowsers)
-@mounts.add_int_mountpoint('/event', BeEF::Core::Handlers::Events)
+mounts = BeEF::Core::Handlers::Mountpoints.instance
+mounts.add_int_mountpoint('/init', BeEF::Core::Handlers::BrowserDetails)
+mounts.add_int_mountpoint('/hook.js', BeEF::Core::Handlers::HookedBrowsers)
+mounts.add_int_mountpoint('/event', BeEF::Core::Handlers::Events)
 
 # RESTful API
 use BeEF::Core::Rest::HookedBrowsers
@@ -209,6 +210,8 @@ use BeEF::Core::Rest::Admin
 use BeEF::Core::Rest::Server # TODO change the way dynamic mounts are added
 use BeEF::Core::Rest::AutorunEngine
 
+# the PublicRouter is responsible to handle public GET requests on /*
+# NOTE: must be the last Sinatra handler since otherwise other routes are overwritten
 require './core/main/publicrouter'
 use BeEF::Core::Router::PublicRouter
 
