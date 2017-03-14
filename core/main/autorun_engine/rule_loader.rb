@@ -87,7 +87,7 @@ module BeEF
         end
 
         def load_directory
-          Dir.glob("#{$root_dir}/arerules/enabled/**/*.json") do |rule|
+          Dir.glob("#{File.expand_path('../../../../', __FILE__)}/arerules/enabled/**/*.json") do |rule|
             print_debug "[ARE] Processing rule: #{rule}"
             self.load_file rule
           end
