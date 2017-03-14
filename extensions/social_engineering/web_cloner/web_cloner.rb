@@ -145,7 +145,7 @@ module BeEF
             end
 
             print_info "Mounting cloned page on URL [#{mount}]"
-            # TODO re-enable this
+            # TODO re-enable this using the new external mount point handler
             # @http_server.mount("#{mount}", interceptor.new)
             # @http_server.remap
 

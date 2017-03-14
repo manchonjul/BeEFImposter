@@ -1,4 +1,4 @@
-function Invoke-ps
+function Lulz
 {
 
 [CmdletBinding( DefaultParameterSetName = 'Metasploit', SupportsShouldProcess = $True , ConfirmImpact = 'High')] Param (

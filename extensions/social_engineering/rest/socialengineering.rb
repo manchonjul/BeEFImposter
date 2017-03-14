@@ -7,13 +7,13 @@
 module BeEF
   module Extension
     module SocialEngineering
-      class SEngRest < BeEF::Core::Router::Router
+      class RestApi < BeEF::Core::Router::Router
 
         config = BeEF::Core::Configuration.instance
 
         before do
-          error 401 unless params[:token] == config.get('beef.api_token')
-          halt 401 if not BeEF::Core::Rest.permitted_source?(request.ip)
+          # TODO re-enable this
+          # halt 401 if not BeEF::Core::Rest.permitted_source?(request.ip)
           headers 'Content-Type' => 'application/json; charset=UTF-8',
                   'Pragma' => 'no-cache',
                   'Cache-Control' => 'no-cache',
@@ -29,7 +29,8 @@ module BeEF
         #     "mount": "/gmail",
         #     "dns_spoof": true
         # }
-        post '/clone_page' do
+        post '/api/seng/clone_page' do
+          error 401 unless params[:token] == config.get('beef.api_token')
           request.body.rewind
           begin
             body = JSON.parse request.body.read
@@ -86,7 +87,8 @@ module BeEF
         #            "user2@antisnatchor.com": "Antisnatchor"
         #}]
         #}
-        post '/send_mails' do
+        post '/api/seng/send_mails' do
+          error 401 unless params[:token] == config.get('beef.api_token')
           request.body.rewind
           begin
             body = JSON.parse request.body.read

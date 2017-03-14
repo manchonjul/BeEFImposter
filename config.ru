@@ -210,6 +210,13 @@ use BeEF::Core::Rest::Admin
 use BeEF::Core::Rest::Server # TODO change the way dynamic mounts are added
 use BeEF::Core::Rest::AutorunEngine
 
+# if the Social Engineering extension is enabled, mount the related handlers and REST endpoints
+if config.get('beef.extension.social_engineering.enable')
+  use BeEF::Extension::SocialEngineering::RestApi
+  use BeEF::Extension::SocialEngineering::PowershellHandler
+end
+
+
 # the PublicRouter is responsible to handle public GET requests on /*
 # NOTE: must be the last Sinatra handler since otherwise other routes are overwritten
 require './core/main/publicrouter'

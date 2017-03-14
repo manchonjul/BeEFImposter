@@ -25,7 +25,7 @@ beef:
     # HTTP server
     http:
         debug: false #Thin::Logging.debug, very verbose. Prints also full exception stack trace.
-        host: "0.0.0.0"
+        host: "172.16.45.1"
         port: "3000"
 
         # Decrease this setting to 1,000 (ms) if you want more responsiveness
@@ -162,7 +162,7 @@ beef:
         metasploit:
             enable: false
         social_engineering:
-            enable: false
+            enable: true
         evasion:
             enable: false
         ipec:
