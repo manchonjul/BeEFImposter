@@ -11,8 +11,7 @@ beef.execute(function() {
   var timeout = parseInt("<%= @timeout %>", 10)*1000;
   var wait    = parseInt("<%= @wait %>", 10)*1000;
   var threads = parseInt("<%= @threads %>", 10);
-  // var urls    = new Array('/favicon.ico', '/favicon.png', '/images/favicon.ico', '/images/favicon.png');
-  var urls    = new Array('/favicon.ico', '/favicon.png', '/images/favicon.ico', '/images/favicon.png', '/icons/apache_pb2.gif');
+  var urls    = new Array('/favicon.ico', '/favicon.png', '/images/favicon.ico', '/images/favicon.png');
 
   if(beef.browser.isO()) {
     beef.debug("[Favicon Scanner] Browser is not supported.");
