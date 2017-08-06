@@ -1,0 +1,35 @@
+{"name": "DORMANT RULE TEST",
+  "author": "bcoles,xntrik",
+  "browser": ["FF", "C"],
+  "browser_version": "ALL",
+  "os": "ALL",
+  "os_version": "ALL",
+  "modules": [
+    {"name": "ping_sweep",
+      "condition": null,
+      "code": "var s=outer_sequential_mod_output.split('.');var start = s[0]+'.'+s[1]+'.'+s[2]+'.117'; var end = s[0]+'.'+s[1]+'.'+s[2]+'.120'; var mod_input = start+'-'+end;",
+      "options": {
+        "rhosts":"<<mod_input>>",
+        "threads":"6"
+      }
+    },
+    {
+      "name": "port_scanner",
+      "condition": "status==1",
+      "code": "var mod_input=ping_sweep_mod_output",
+      "options": {
+        "ipHost":"<<mod_input>>",
+        "ports":"22,80,443,8888,9000",
+        "closetimeout":"1100",
+        "opentimeout":"2500",
+        "delay":"600",
+        "debug":"false"
+      }
+    }
+  ],
+  "execution_order": [0,1],
+  "execution_delay": [0,0],
+  "chain_mode": "dormant-forward",
+  "stealth_mode": 2,
+  "dormant_end_mode": 1
+}

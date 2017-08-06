@@ -1,0 +1,23 @@
+{"name": "DORMANT RULE TEST",
+  "author": "bcoles,xntrik",
+  "browser": ["FF", "C"],
+  "browser_version": "ALL",
+  "os": "ALL",
+  "os_version": "ALL",
+  "modules": [
+    {"name": "test_cors_request",
+      "condition": null,
+      "code": null,
+      "options": {
+        "method":"GET",
+        "url":"http://192.168.0.119:8888/ping?ip=127.0.0.1%3Bwhoami",
+        "data":""
+      }
+    }
+  ],
+  "execution_order": [0],
+  "execution_delay": [0],
+  "chain_mode": "dormant-forward",
+  "stealth_mode": 2,
+  "dormant_end_mode": 1
+}

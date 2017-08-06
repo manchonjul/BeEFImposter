@@ -1,0 +1,27 @@
+{"name": "DORMANT RULE TEST 2",
+  "author": "bcoles,xntrik",
+  "browser": ["FF", "C"],
+  "browser_version": "ALL",
+  "os": "ALL",
+  "os_version": "ALL",
+  "modules": [
+    {"name": "port_scanner",
+      "condition": null,
+      "code": "",
+      "options": {
+        "ipHost":"192.168.0.119",
+        "ports":"22,80,443,8888,9000",
+        "closetimeout":"1100",
+        "opentimeout":"2500",
+        "delay":"600",
+        "debug":"false"
+
+      }
+    }
+  ],
+  "execution_order": [0],
+  "execution_delay": [0],
+  "chain_mode": "dormant-forward",
+  "stealth_mode": 2,
+  "dormant_end_mode": 1
+}
