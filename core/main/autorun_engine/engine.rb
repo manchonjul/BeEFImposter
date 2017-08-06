@@ -169,13 +169,10 @@ module BeEF
 
               delayed_exec += %Q|
                 function isResReady(mod_result, start){
-                    console.log(" I AM IN THE isReadready");
                     if (mod_result === null && parseInt(((new Date().getTime()) - start)) < #{@result_poll_timeout}){
                         // loop
                     }else{
                         // module return status/data is now available
-                        console.log(" module return status / data is now AVAILABLE");
-                        console.log(mod_result);
                         clearInterval(resultReady);
                         if (mod_result === null && #{@continue_after_timeout}){
                             var mod_result = [];
@@ -192,8 +189,6 @@ module BeEF
                             function #{mods[order[c]][:mod_name]}_#{rule_token}_f(){
                                 if(#{mods[order[c]][:mod_name]}_#{rule_token}_can_exec){
                                     #{code_snippet}
-                                    console.log("mod_input:");
-                                    console.log(mod_input);
                                     #{mods[order[c]][:mod_name]}_#{rule_token}(#{mod_input});
 
                                     if (stealthLevel > 1) {
@@ -215,7 +210,6 @@ module BeEF
                         }
                     }
                 }
-                console.log(" I AM IN THE DELAYED EXE FINAL");
 
                 var start = (new Date()).getTime();
                 var resultReady = setInterval(function() {
