@@ -5,20 +5,18 @@
   "os": "ALL",
   "os_version": "ALL",
   "modules": [
-    {"name": "get_http_servers",
+    {"name": "ping_sweep",
       "condition": null,
-      "code": "var s=outer_sequential_mod_output.split('.');var start = s[0]+'.'+s[1]+'.'+s[2]+'.68'; var end = s[0]+'.'+s[1]+'.'+s[2]+'.70'; var mod_input = start+'-'+end;",
+      "code": "var s=outer_sequential_mod_output.split('.');var start = s[0]+'.'+s[1]+'.'+s[2]+'.117'; var end = s[0]+'.'+s[1]+'.'+s[2]+'.120'; var mod_input = start+'-'+end;",
       "options": {
         "rhosts":"<<mod_input>>",
-        "ports":"80,8080,8081,8888",
-        "threads":"3",
-        "wait":"5",
-        "timeout":"10"
+        "threads":"6"
       }
     }
   ],
   "execution_order": [0],
   "execution_delay": [0],
   "chain_mode": "dormant-forward",
-  "stealth_mode": 2
+  "stealth_mode": 2,
+  "dormant_end_mode": 1
 }
