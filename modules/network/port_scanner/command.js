@@ -340,9 +340,9 @@ beef.execute(function() {
 		if(count < ports_list.length)
 		{
 			start_time_cors = (new Date).getTime();
-			//cors_scan(host, ports_list[count]);
+			cors_scan(host, ports_list[count]);
 			start_time_ws = (new Date).getTime();
-			//websocket_scan(host, ports_list[count]);
+			websocket_scan(host, ports_list[count]);
 			start_time_http = (new Date).getTime();
 			http_scan(protocol, host, ports_list[count]);
     		}
