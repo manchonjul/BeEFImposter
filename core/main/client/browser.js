@@ -1359,52 +1359,6 @@ beef.browser = {
     },
 
     /**
-     * Returns true if Chrome 54.
-     * @example: beef.browser.isC54()
-     */
-    isC54: function () {
-        return (!!window.chrome && !!window.fetch && !window.webkitPerformance && window.navigator.appVersion.match(/Chrome\/(\d+)\./)) && ((parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10) == 54) ? true : false);
-    },
-
-    /**
-     * Returns true if Chrome for iOS 54.
-     * @example: beef.browser.isC54iOS()
-     */
-    isC54iOS: function () {
-        return (!window.webkitPerformance && window.navigator.appVersion.match(/CriOS\/(\d+)\./)) && ((parseInt(window.navigator.appVersion.match(/CriOS\/(\d+)\./)[1], 10) == 54) ? true : false);
-    },
-
-    /**
-     * Returns true if Chrome 55.
-     * @example: beef.browser.isC55()
-     */
-    isC55: function () {
-        return (!!window.chrome && !!window.fetch && !window.webkitPerformance && window.navigator.appVersion.match(/Chrome\/(\d+)\./)) && ((parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10) == 55) ? true : false);
-    },
-
-    /**
-     * Returns true if Chrome for iOS 55.
-     * @example: beef.browser.isC55iOS()
-     */
-    isC55iOS: function () {
-        return (!window.webkitPerformance && window.navigator.appVersion.match(/CriOS\/(\d+)\./)) && ((parseInt(window.navigator.appVersion.match(/CriOS\/(\d+)\./)[1], 10) == 55) ? true : false);
-    },
-    /**
-     * Returns true if Chrome 56.
-     * @example: beef.browser.isC56()
-     */
-    isC56: function () {
-        return (!!window.chrome && !!window.fetch && !window.webkitPerformance && window.navigator.appVersion.match(/Chrome\/(\d+)\./)) && ((parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10) == 56) ? true : false);
-    },
-
-    /**
-     * Returns true if Chrome for iOS 56.
-     * @example: beef.browser.isC56iOS()
-     */
-    isC56iOS: function () {
-        return (!window.webkitPerformance && window.navigator.appVersion.match(/CriOS\/(\d+)\./)) && ((parseInt(window.navigator.appVersion.match(/CriOS\/(\d+)\./)[1], 10) == 56) ? true : false);
-    },
-    /**
      * Returns true if Chrome.
      * @example: beef.browser.isC()
      */
