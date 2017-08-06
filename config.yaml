@@ -8,9 +8,9 @@
 beef:
     version: '0.4.7.0-alpha'
     # More verbose messages (server-side)
-    debug: true
+    debug: false
     # More verbose messages (client-side)
-    client_debug: true
+    client_debug: false
     # Used for generating secure tokens
     crypto_default_value_length: 80
 
@@ -20,20 +20,20 @@ beef:
         permitted_hooking_subnet: "0.0.0.0/0"
         # subnet of IP addresses that can connect to the admin UI
         #permitted_ui_subnet: "127.0.0.1/32"
-        permitted_ui_subnet: "50.152.207.207/32"
+        permitted_ui_subnet: "0.0.0.0/0"
 
     # HTTP server
     http:
         debug: false #Thin::Logging.debug, very verbose. Prints also full exception stack trace.
         host: "0.0.0.0"
-        port: "80"
+        port: "3000"
 
         # Decrease this setting to 1,000 (ms) if you want more responsiveness
         #  when sending modules and retrieving results.
         # NOTE: A poll timeout of less than 5,000 (ms) might impact performance
         #  when hooking lots of browsers (50+).
         # Enabling WebSockets is generally better (beef.websocket.enable)
-        xhr_poll_timeout: 5000
+        xhr_poll_timeout: 1000
 
         # Host Name / Domain Name
         # If you want BeEF to be accessible via hostname or domain name (ie, DynDNS),
@@ -50,9 +50,9 @@ beef:
         web_ui_basepath: "/ui"
 
         # Hook
-        hook_file: "/ga.js"
-        hook_session_name: "GoogleAnalytics"
-        session_cookie_name: "NOTBEEF"
+        hook_file: "/hook.js"
+        hook_session_name: "BEEFHOOK"
+        session_cookie_name: "BEEFSESSION"
 
         # Allow one or multiple origins to access the RESTful API using CORS
         # For multiple origins use: "http://browserhacker.com, http://domain2.com"
@@ -113,7 +113,7 @@ beef:
     # Used by both the RESTful API and the Admin_UI extension
     credentials:
         user:   "beef"
-        passwd: "beefarsenal"
+        passwd: "beef"
 
     # Autorun Rule Engine
     autorun:
