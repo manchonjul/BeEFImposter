@@ -80,7 +80,7 @@ Beefaredormant.prototype.dumpToBeef = function() {
   // Because fuseall includes *all* the state info, lets dump it
   // to the beef handler
   this.fuseall.forEach(function(network) {
-    let msg = "Time: '" + network.ts + "' | ";
+    var msg = "Time: '" + network.ts + "' | ";
     msg = msg + "RTC: '" + network.rtc + "' | ";
     msg = msg + "External: '" + network.ip + "' | ";
     msg = msg + "ISP: '" + network.shorttitle + " - " + network.title + "'";
@@ -98,7 +98,7 @@ Beefaredormant.prototype.printStatus = function(sendtobeef) {
   this.verbLog("ISP: '" + this.isp + "'");
 
   if (sendtobeef == true) {
-    let msg = "Online: '" + this.onlineStatus + "' | ";
+    var msg = "Online: '" + this.onlineStatus + "' | ";
     msg = msg + "RTC: '" + this.rtcIps + "' | ";
     msg = msg + "External: '" + this.externalIp + "' | ";
     msg = msg + "ISP: '" + this.isp + "'";
@@ -229,15 +229,15 @@ Beefaredormant.prototype.saveState = function(saveLocal, id, online, rtc, ip, is
   } // else ? what then?
 
   //lets build up our fuse lists
-  let astitle = isp;
-  let asshort = "";
+  var astitle = isp;
+  var asshort = "";
   if (isp.indexOf(" - ") !== -1) {
     // we have a split
     astitle = isp.split(/ - (.+)/)[1]
     asshort = isp.split(" - ")[0]
   }
 
-  let asn = {title: astitle, shorttitle: asshort, id: id, rtc: rtc, ip: ip, ts: Date.now()};
+  var asn = {title: astitle, shorttitle: asshort, id: id, rtc: rtc, ip: ip, ts: Date.now()};
   this.fuseall.push(asn); // we'll keep on building these up
 
   if (id === 0) {
@@ -407,9 +407,9 @@ Beefaredormant.prototype.checkInitialRtcOrIsp = function(ip, isp) {
       this.verbLog("ip is exactly the same");
       result = true;
     } else {
-      let matchedIp = "";
-      let brokenew = ip.split(".");
-      let brokeold = localStorage.getItem('rtc_0').split(".");
+      var matchedIp = "";
+      var brokenew = ip.split(".");
+      var brokeold = localStorage.getItem('rtc_0').split(".");
 
       for (var i = 0; i < 4; i++) {
         if (i > 0) {
@@ -439,13 +439,13 @@ Beefaredormant.prototype.checkInitialRtcOrIsp = function(ip, isp) {
       // time for fuzzy matching?
 
       // first lets only allow particular characters
-      let shortisp = isp.replace(/[^a-zA-Z0-9-_]/,'');
+      var shortisp = isp.replace(/[^a-zA-Z0-9-_]/,'');
       // shorten
       // by removing words less than 1-3 characters long
       shortisp = shortisp.replace(/\W*\b\w{1,2}\b/g,"");
       shortisp = shortisp.substring(0,32);
-      let fuse = new Fuse(this.fusefirst, this.fuseoptions);
-      let fuseresult = fuse.search(shortisp);
+      var fuse = new Fuse(this.fusefirst, this.fuseoptions);
+      var fuseresult = fuse.search(shortisp);
 
       if (fuseresult.length > 0) {
         this.verbLog("Fuzzy match HIT");
