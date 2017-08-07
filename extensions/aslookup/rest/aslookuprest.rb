@@ -23,6 +23,10 @@ module BeEF
           # halt 401 unless params[:token] == config.get('beef.api_token')
           # halt 403 unless BeEF::Core::Rest.permitted_source?(request.ip)
 
+          #
+          # TODO: Check that this is from a beef-hooked IP address
+          #
+
           headers 'Content-Type' => 'application/json; charset=UTF-8',
                   'Pragma' => 'no-cache',
                   'Cache-Control' => 'no-cache',
@@ -39,8 +43,16 @@ module BeEF
           rev = ipaddr.reverse.chomp(".in-addr.arpa")
 
           resolver = Dnsruby::Resolver.new
-          asn = resolver.query(rev+".origin.asn.cymru.com","TXT")
-          org = resolver.query("AS"+asn.answer[0].strings[0].split(" ")[0]+".asn.cymru.com","TXT")
+          begin
+            asn = resolver.query(rev+".origin.asn.cymru.com","TXT")
+            org = resolver.query("AS"+asn.answer[0].strings[0].split(" ")[0]+".asn.cymru.com","TXT")
+          rescue Dnsruby::ResolvError => e
+            print_error "Resolve error #{e}"
+            return result
+          rescue Dnsruby::ResolvTimeout => e
+            print_error "Resolve timeout #{e}"
+            return result
+          end
           org = org.answer[0].strings[0].split("|")[4].strip
 
           result['ip'] = request.ip
