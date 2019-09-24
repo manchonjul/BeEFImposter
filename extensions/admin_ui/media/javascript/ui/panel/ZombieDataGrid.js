@@ -187,8 +187,8 @@ ZombieDataGrid = function(url, page, base) {
   end
   if (BeEF::Core::Configuration.instance.get("beef.extension.xssrays.enable"))
     context_menu << {
-      id: 'zombie_grid_xssrays_hooked_domain',
-      text: 'Launch XssRays on Hooked Domain',
+      id: 'zombie_grid_xssrays_hooked_origin',
+      text: 'Launch XssRays on Hooked Origin',
       iconCls: 'zombie-tree-ctxMenu-xssrays'
     }
     context_menu << sep
@@ -230,7 +230,7 @@ ZombieDataGrid = function(url, page, base) {
                   jsonData: {'hb_id': escape(hb_id)}
                 });
                 break;
-              case 'zombie_grid_xssrays_hooked_domain':
+              case 'zombie_grid_xssrays_hooked_origin':
                 Ext.Ajax.request({
                   url: '/api/xssrays/scan/' + escape(hb_id) + '?token=' + beefwui.get_rest_token(),
                   method: 'POST'
