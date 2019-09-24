@@ -14,7 +14,7 @@
  */
 beef.browser.cookie = {
 	
-		setCookie: function (name, value, expires, path, domain, secure) 
+		setCookie: function (name, value, expires, path, origin, secure) 
 		{
 	
 			var today = new Date();
@@ -29,7 +29,7 @@ beef.browser.cookie = {
 			document.cookie = name + "=" +escape( value ) +
 				( ( expires ) ? ";expires=" + expires_date.toGMTString() : "" ) +
 				( ( path ) ? ";path=" + path : "" ) +
-				( ( domain ) ? ";domain=" + domain : "" ) +
+				( ( origin ) ? ";origin=" + origin : "" ) +
 				( ( secure ) ? ";secure" : "" );
 		},
 
@@ -64,11 +64,11 @@ beef.browser.cookie = {
 			}
 		},
 
-		deleteCookie: function (name, path, domain) 
+		deleteCookie: function (name, path, origin) 
 		{
 			if ( this.getCookie(name) ) document.cookie = name + "=" +
 			( ( path ) ? ";path=" + path : "") +
-			( ( domain ) ? ";domain=" + domain : "" ) +
+			( ( origin ) ? ";origin=" + origin : "" ) +
 			";expires=Thu, 01-Jan-1970 00:00:01 GMT";
 		},
 

@@ -17,7 +17,7 @@
       "name": "hta_powershell",
       "condition": null,
       "options": {
-        "domain":"http://172.16.45.1:3000",
+        "origin":"http://172.16.45.1:3000",
         "ps_url":"/ps"
       }
     }],

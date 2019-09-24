@@ -5113,7 +5113,7 @@ jQuery.extend({
 			xhr.open(type, s.url, s.async);
 		}
 
-		// Need an extra try/catch for cross domain requests in Firefox 3
+		// Need an extra try/catch for cross-origin requests in Firefox 3
 		try {
 			// Set the correct header, if data is being sent
 			if ( s.data || origSettings && origSettings.contentType ) {

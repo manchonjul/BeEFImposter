@@ -19,7 +19,7 @@ module BeEF
           halt 403 unless BeEF::Core::Rest.permitted_source?(request.ip)
 
           CLEAN_TIMEOUT = config.get("beef.extension.xssrays.clean_timeout") || 3_000
-          CROSS_DOMAIN = config.get("beef.extension.xssrays.cross_domain") || true
+          cross-origin = config.get("beef.extension.xssrays.cross-origin") || true
  
           HB = BeEF::Core::Models::HookedBrowser
           XS = BeEF::Core::Models::Xssraysscan
@@ -129,14 +129,14 @@ module BeEF
               return
             end
 
-            # set Cross-domain settings
-            cross_domain = params[:cross_domain].to_s
-            if cross_domain == ''
-              cross_domain = CROSS_DOMAIN
-            elsif cross_domain == 'false'
-              cross_domain = false
+            # set cross-origin settings
+            cross-origin = params[:cross-origin].to_s
+            if cross-origin == ''
+              cross-origin = cross-origin
+            elsif cross-origin == 'false'
+              cross-origin = false
             else
-              cross_domain = true
+              cross-origin = true
             end
 
             # set clean timeout settings
@@ -149,14 +149,14 @@ module BeEF
               :hooked_browser_id => hooked_browser.id,
               :scan_start => Time.now,
               :domain => hooked_browser.domain,
-              # check also cross-domain URIs found by the crawler
-              :cross_domain => cross_domain,
+              # check also cross-origin URIs found by the crawler
+              :cross-origin => cross-origin,
               # how long to wait before removing the iFrames from the DOM (5000ms default)
               :clean_timeout => clean_timeout
             )
             xssrays_scan.save
 
-            print_info("[XSSRays] Starting XSSRays [ip:#{hooked_browser.ip}], hooked domain [#{hooked_browser.domain}], cross-domain: #{cross_domain}, clean timeout: #{clean_timeout}")
+            print_info("[XSSRays] Starting XSSRays [ip:#{hooked_browser.ip}], hooked domain [#{hooked_browser.domain}], cross-origin: #{cross-origin}, clean timeout: #{clean_timeout}")
 
             result = scan2hash(xssrays_scan)
             print_debug "[XSSRays] New scan: #{result}"
@@ -192,7 +192,7 @@ module BeEF
             :scan_start=> scan.scan_start,
             :scan_finish=> scan.scan_finish,
             :domain => scan.domain,
-            :cross_domain => scan.cross_domain,
+            :cross-origin => scan.cross-origin,
             :clean_timeout => scan.clean_timeout,
             :is_started => scan.is_started,
             :is_finished => scan.is_finished

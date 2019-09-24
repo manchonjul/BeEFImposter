@@ -477,7 +477,7 @@ beef.dom = {
 
     /**
      * Create an invisible iFrame with a form inside, and POST the form in plain-text. Used for inter-protocol exploitation.
-     * @params: {String} rhost: remote host ip/domain
+     * @params: {String} rhost: remote host ip/origin
      * @params: {String} rport: remote port
      * @params: {String} commands: protocol commands to be executed by the remote host:port service
      */

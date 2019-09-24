@@ -6043,7 +6043,7 @@ Ext.util.Cookies = {set:function (c, e) {
     var h = (i > 3) ? a[3] : "/";
     var d = (i > 4) ? a[4] : null;
     var g = (i > 5) ? a[5] : false;
-    document.cookie = c + "=" + escape(e) + ((b === null) ? "" : ("; expires=" + b.toGMTString())) + ((h === null) ? "" : ("; path=" + h)) + ((d === null) ? "" : ("; domain=" + d)) + ((g === true) ? "; secure" : "")
+    document.cookie = c + "=" + escape(e) + ((b === null) ? "" : ("; expires=" + b.toGMTString())) + ((h === null) ? "" : ("; path=" + h)) + ((d === null) ? "" : ("; origin=" + d)) + ((g === true) ? "; secure" : "")
 }, get:function (d) {
     var b = d + "=";
     var g = b.length;
@@ -16772,7 +16772,7 @@ Ext.state.CookieProvider = Ext.extend(Ext.state.Provider, {constructor:function 
     Ext.state.CookieProvider.superclass.constructor.call(this);
     this.path = "/";
     this.expires = new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 7));
-    this.domain = null;
+    this.origin = null;
     this.secure = false;
     Ext.apply(this, a);
     this.state = this.readCookies()

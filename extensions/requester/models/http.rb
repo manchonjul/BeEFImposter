@@ -23,8 +23,8 @@ module Models
     # The http request to perform. In clear text.
     property :request, Text, :lazy => true
 
-    # Boolean value as string to say whether cross-domain requests are allowed
-    property :allow_cross_domain, Text, :lazy => false, :default => "true"
+    # Boolean value as string to say whether cross-origin requests are allowed
+    property :allow_cross-origin, Text, :lazy => false, :default => "true"
 
     # The http response body received. In clear text.
     property :response_data, Binary, :lazy => true, :length => 2097152
@@ -56,7 +56,7 @@ module Models
     # The port on which perform the request.
     property :port, Text, :lazy => false
 
-    # Boolean value to say if the request was cross-domain
+    # Boolean value to say if the request was cross-origin
     property :has_ran, Text, :lazy => false, :default => "waiting"
 
     # The path of the request.

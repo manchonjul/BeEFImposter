@@ -93,7 +93,7 @@ beef.browser = {
      * @example: beef.browser.isIE8()
      */
     isIE8: function () {
-        return !!window.XMLHttpRequest && !window.chrome && !window.opera && !!document.documentMode && !!window.XDomainRequest && !window.performance;
+        return !!window.XMLHttpRequest && !window.chrome && !window.opera && !!document.documentMode && !!window.XoriginRequest && !window.performance;
     },
 
     /**
@@ -101,7 +101,7 @@ beef.browser = {
      * @example: beef.browser.isIE9()
      */
     isIE9: function () {
-        return !!window.XMLHttpRequest && !window.chrome && !window.opera && !!document.documentMode && !!window.XDomainRequest && !!window.performance && typeof navigator.msMaxTouchPoints === "undefined";
+        return !!window.XMLHttpRequest && !window.chrome && !window.opera && !!document.documentMode && !!window.XoriginRequest && !!window.performance && typeof navigator.msMaxTouchPoints === "undefined";
     },
 
     /**
@@ -110,7 +110,7 @@ beef.browser = {
      * @example: beef.browser.isIE10()
      */
     isIE10: function () {
-        return !!window.XMLHttpRequest && !window.chrome && !window.opera && !!document.documentMode && !window.XDomainRequest && !!window.performance && typeof navigator.msMaxTouchPoints !== "undefined";
+        return !!window.XMLHttpRequest && !window.chrome && !window.opera && !!document.documentMode && !window.XoriginRequest && !!window.performance && typeof navigator.msMaxTouchPoints !== "undefined";
     },
 
     /**
@@ -119,7 +119,7 @@ beef.browser = {
      * @example: beef.browser.isIE11()
      */
     isIE11: function () {
-        return !!window.XMLHttpRequest && !window.chrome && !window.opera && !!document.documentMode && !!window.performance && typeof navigator.msMaxTouchPoints !== "undefined" && typeof document.selection === "undefined" && typeof document.createStyleSheet === "undefined" && typeof window.createPopup === "undefined" && typeof window.XDomainRequest === "undefined";
+        return !!window.XMLHttpRequest && !window.chrome && !window.opera && !!document.documentMode && !!window.performance && typeof navigator.msMaxTouchPoints !== "undefined" && typeof document.selection === "undefined" && typeof document.createStyleSheet === "undefined" && typeof window.createPopup === "undefined" && typeof window.XoriginRequest === "undefined";
     },
 
     /**
@@ -3874,7 +3874,7 @@ beef.browser = {
     hasCors: function () {
         if ('withCredentials' in new XMLHttpRequest())
             return true;
-        else if (typeof XDomainRequest !== "undefined")
+        else if (typeof XoriginRequest !== "undefined")
             return true;
         else
             return false;
@@ -4578,7 +4578,7 @@ beef.browser = {
      *
      *  This code is based on research from browserspy.dk
      *
-     * @parameter {ENUM: 'PER_DOMAIN', 'GLOBAL'=>default}
+     * @parameter {ENUM: 'PER_origin', 'GLOBAL'=>default}
      * @return {Deferred promise} A jQuery deferred object promise, which when resolved passes
      *    the number of connections to the callback function as "this"
      *
@@ -4595,7 +4595,7 @@ beef.browser = {
         var testUrl = "";		// The image testing service URL
 
         // User broserspy.dk max connections service URL.
-        if (scope == 'PER_DOMAIN')
+        if (scope == 'PER_origin')
             testUrl = "http://browserspy.dk/connections.php?img=1&amp;random=";
         else
             // The token will be replaced by a different number with each request (different origin).

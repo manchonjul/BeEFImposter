@@ -21,7 +21,7 @@ module BeEF
                   'Expires' => '0'
         end
 
-        # Determine the exact size of the cross-domain request HTTP headers.
+        # Determine the exact size of the cross-origin request HTTP headers.
         # Needed to calculate junk properly and prevent errors.
         # See modules/exploits/beefbind/beef_bind_staged_deploy/command.js for more info.
         # todo: the core of this method should be moved to ../junk_calculator.rb
@@ -36,7 +36,7 @@ module BeEF
 
               headers = socket_data.split("\r\n\r\n").first
               BeEF::Core::NetworkStack::Handlers::AssetHandler.instance.unbind_socket(socket_name)
-              print_info "[IPEC] Cross-domain XmlHttpRequest headers size - received from bind socket [#{socket_name}]: #{headers.size + 4} bytes."
+              print_info "[IPEC] cross-origin XmlHttpRequest headers size - received from bind socket [#{socket_name}]: #{headers.size + 4} bytes."
               # CRLF -> 4 bytes
               result['size'] = headers.size + 4
 

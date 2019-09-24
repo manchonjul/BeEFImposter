@@ -23,7 +23,7 @@ module Models
     property :scan_finish, DateTime, :lazy => true
 
     property :domain, Text, :lazy => true
-    property :cross_domain, Text, :lazy => true
+    property :cross-origin, Text, :lazy => true
     property :clean_timeout, Integer, :lazy => false
 
     property :is_started, Boolean, :lazy => false, :default => false

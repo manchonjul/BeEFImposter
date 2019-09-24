@@ -42,7 +42,7 @@ beef.net.xssrays = {
     hookedBrowserSession: "",
     beefRayUrl: "",
     // the following variables are overridden via BeEF, in the Scan Config XssRays sub-tab. 
-    crossDomain: false,
+    crossorigin: false,
     cleanUpTimeout:5000,
 
     //browser-specific attack vectors available strings: ALL, FF, IE, S, C, O
@@ -102,13 +102,13 @@ beef.net.xssrays = {
     },
 
     // main function, where all starts :-)
-    startScan:function(xssraysScanId, hookedBrowserSession, beefUrl, crossDomain, timeout) {
+    startScan:function(xssraysScanId, hookedBrowserSession, beefUrl, crossorigin, timeout) {
 
         this.xssraysScanId = xssraysScanId;
         this.hookedBrowserSession = hookedBrowserSession;
         this.beefRayUrl = beefUrl + '/' + this.handler;
         beef.debug("Using [" + this.beefRayUrl  + "] handler to contact back BeEF");
-        this.crossDomain = crossDomain;
+        this.crossorigin = crossorigin;
         this.cleanUpTimeout = timeout;
 
         this.scan();
@@ -153,14 +153,14 @@ beef.net.xssrays = {
         for (var i = 0; i < document.links.length; i++) {
             var url = document.links[i];
 
-            if ((url.hostname.toString() === location.hostname.toString() || this.crossDomain) && (location.protocol === 'http:' || location.protocol === 'https:')) {
+            if ((url.hostname.toString() === location.hostname.toString() || this.crossorigin) && (location.protocol === 'http:' || location.protocol === 'https:')) {
                 beef.debug("Starting scanning URL [" + url + "]\n url.href => " + url.href +
                     "\n url.pathname => " + url.pathname + "\n" +
                     "url.search => " + url.search + "\n");
                 this.xss({href:url.href, pathname:url.pathname, hostname:url.hostname, port: url.port, protocol: location.protocol,
                     search:url.search, type: 'url'});//scan each link & param
             } else {
-                beef.debug('Scan is not Cross-domain.  URLS\nurl :' + url.hostname.toString());
+                beef.debug('Scan is not Cross-origin.  URLS\nurl :' + url.hostname.toString());
                 beef.debug('\nlocation :' + location.hostname.toString());
             }
         }
@@ -240,7 +240,7 @@ beef.net.xssrays = {
                             continue;
                         }
                         if (!this.crossDomain && (this.host(action).toString() != this.host(location.toString()))) {
-                            beef.debug('Scan is not Cross-domain. FormPost\naction :' + this.host(action).toString());
+                            beef.debug('Scan is not Cross-origin. FormPost\naction :' + this.host(action).toString());
                             beef.debug('location :' + this.host(location));
                             continue;
                         }
