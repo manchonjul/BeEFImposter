@@ -43,7 +43,7 @@ beef:
         # Enabling WebSockets is generally better (beef.websocket.enable)
         xhr_poll_timeout: 1000
 
-        # Host Name / origin Name
+        # Host Name / Domain Name
         # If you want BeEF to be accessible via hostname or domain name (ie, DynDNS),
         #   set the public hostname below:
         #public: ""      # public hostname/IP address

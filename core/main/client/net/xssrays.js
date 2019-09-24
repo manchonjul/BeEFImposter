@@ -239,7 +239,7 @@ beef.net.xssrays = {
                         if (!this.vectors[k].form) {
                             continue;
                         }
-                        if (!this.crossDomain && (this.host(action).toString() != this.host(location.toString()))) {
+                        if (!this.crossorigin && (this.host(action).toString() != this.host(location.toString()))) {
                             beef.debug('Scan is not Cross-origin. FormPost\naction :' + this.host(action).toString());
                             beef.debug('location :' + this.host(location));
                             continue;
