@@ -205,7 +205,7 @@ beef.net = {
      * Performs http requests
      * @param: {String} scheme: HTTP or HTTPS
      * @param: {String} method: GET or POST
-     * @param: {String} origin: bindshell.net, 192.168.3.4, etc
+     * @param: {String} domain: bindshell.net, 192.168.3.4, etc
      * @param: {Int} port: 80, 5900, etc
      * @param: {String} path: /path/to/resource
      * @param: {String} anchor: this is the value that comes after the # in the URL
@@ -356,8 +356,8 @@ beef.net = {
         if (allowCrossDomain == "false" && cross-origin) {
             beef.debug("[beef.net.forge_request] Error: cross-origin Request. The request was not sent.");
             response.status_code = -1;
-            response.status_text = "crossdomain";
-            response.port_status = "crossdomain";
+            response.status_text = "crossorigin";
+            response.port_status = "crossorigin";
             response.response_body = "ERROR: cross-origin Request. The request was not sent.\n";
             response.headers = "ERROR: cross-origin Request. The request was not sent.\n";
             if (callback != null) callback(response, requestid);
@@ -435,7 +435,7 @@ beef.net = {
                 // cross-origin request
                 if (cross-origin) {
 
-                    response.port_status = "crossdomain";
+                    response.port_status = "crossorigin";
 
                     if (xhr.status != 0) {
                         response.status_code = xhr.status;
@@ -446,7 +446,7 @@ beef.net = {
                     if (textStatus) {
                         response.status_text = textStatus;
                     } else {
-                        response.status_text = "crossdomain";
+                        response.status_text = "crossorigin";
                     }
 
                     if (xhr.getAllResponseHeaders()) {

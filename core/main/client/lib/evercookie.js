@@ -31,7 +31,7 @@
  *  for example, if someone deletes all but one type of cookie, once
  *  that cookie is re-discovered, all of the other cookie types get reset
  *
- *  !!! SOME OF THESE ARE CROSS-origin COOKIES, THIS MEANS
+ *  !!! SOME OF THESE ARE CROSS-ORIGIN COOKIES, THIS MEANS
  *  OTHER SITES WILL BE ABLE TO READ SOME OF THESE COOKIES !!!
  *
  * USAGE:

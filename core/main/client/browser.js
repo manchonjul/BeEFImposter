@@ -4578,7 +4578,7 @@ beef.browser = {
      *
      *  This code is based on research from browserspy.dk
      *
-     * @parameter {ENUM: 'PER_origin', 'GLOBAL'=>default}
+     * @parameter {ENUM: 'PER_ORIGIN', 'GLOBAL'=>default}
      * @return {Deferred promise} A jQuery deferred object promise, which when resolved passes
      *    the number of connections to the callback function as "this"
      *
