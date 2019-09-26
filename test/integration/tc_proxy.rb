@@ -93,7 +93,7 @@ class TC_Proxy < Test::Unit::TestCase
       res = IO.popen(cmd, 'r+').read
       assert_not_empty(res)
       assert_not_nil(res)
-      raise "Proxy request failed - Unexpected response #{@@proxy}" unless res =~ /ERROR: cross-origin Request/
+      raise "Proxy request failed - Unexpected response #{@@proxy}" unless res =~ /ERROR: Cross Origin Request/
     end
   end
 end

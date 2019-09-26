@@ -24,7 +24,7 @@ module Models
     property :request, Text, :lazy => true
 
     # Boolean value as string to say whether cross-origin requests are allowed
-    property :allow_cross-origin, Text, :lazy => false, :default => "true"
+    property :allow_cross_origin, Text, :lazy => false, :default => "true"
 
     # The http response body received. In clear text.
     property :response_data, Binary, :lazy => true, :length => 2097152

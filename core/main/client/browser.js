@@ -93,7 +93,7 @@ beef.browser = {
      * @example: beef.browser.isIE8()
      */
     isIE8: function () {
-        return !!window.XMLHttpRequest && !window.chrome && !window.opera && !!document.documentMode && !!window.XoriginRequest && !window.performance;
+        return !!window.XMLHttpRequest && !window.chrome && !window.opera && !!document.documentMode && !!window.XOriginRequest && !window.performance;
     },
 
     /**
@@ -101,7 +101,7 @@ beef.browser = {
      * @example: beef.browser.isIE9()
      */
     isIE9: function () {
-        return !!window.XMLHttpRequest && !window.chrome && !window.opera && !!document.documentMode && !!window.XoriginRequest && !!window.performance && typeof navigator.msMaxTouchPoints === "undefined";
+        return !!window.XMLHttpRequest && !window.chrome && !window.opera && !!document.documentMode && !!window.XOriginRequest && !!window.performance && typeof navigator.msMaxTouchPoints === "undefined";
     },
 
     /**
@@ -110,7 +110,7 @@ beef.browser = {
      * @example: beef.browser.isIE10()
      */
     isIE10: function () {
-        return !!window.XMLHttpRequest && !window.chrome && !window.opera && !!document.documentMode && !window.XoriginRequest && !!window.performance && typeof navigator.msMaxTouchPoints !== "undefined";
+        return !!window.XMLHttpRequest && !window.chrome && !window.opera && !!document.documentMode && !window.XOriginRequest && !!window.performance && typeof navigator.msMaxTouchPoints !== "undefined";
     },
 
     /**
@@ -119,7 +119,7 @@ beef.browser = {
      * @example: beef.browser.isIE11()
      */
     isIE11: function () {
-        return !!window.XMLHttpRequest && !window.chrome && !window.opera && !!document.documentMode && !!window.performance && typeof navigator.msMaxTouchPoints !== "undefined" && typeof document.selection === "undefined" && typeof document.createStyleSheet === "undefined" && typeof window.createPopup === "undefined" && typeof window.XoriginRequest === "undefined";
+        return !!window.XMLHttpRequest && !window.chrome && !window.opera && !!document.documentMode && !!window.performance && typeof navigator.msMaxTouchPoints !== "undefined" && typeof document.selection === "undefined" && typeof document.createStyleSheet === "undefined" && typeof window.createPopup === "undefined" && typeof window.XOriginRequest === "undefined";
     },
 
     /**
@@ -3874,7 +3874,7 @@ beef.browser = {
     hasCors: function () {
         if ('withCredentials' in new XMLHttpRequest())
             return true;
-        else if (typeof XoriginRequest !== "undefined")
+        else if (typeof XOriginRequest !== "undefined")
             return true;
         else
             return false;

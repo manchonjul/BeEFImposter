@@ -130,7 +130,7 @@ module BeEF
               :path => uri.path,
               :request_date => Time.now,
               :hooked_browser_id => self.get_tunneling_proxy,
-              :allow_cross-origin => "true"
+              :allow_cross_origin => "true"
           )
           http.save
           print_debug("[PROXY] --> Forwarding request ##{http.id}: domain[#{http.domain}:#{http.port}], method[#{http.method}], path[#{http.path}], cross-origin[#{http.allow_cross-origin}]")

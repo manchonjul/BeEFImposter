@@ -35,7 +35,7 @@ beef.mitb = {
                         if (method == "GET") {
                             //GET request -> cross-origin
                             if (url.indexOf(document.location.hostname) == -1 || (portR != null && requestPort != document.location.port )) {
-                                beef.mitb.sniff("GET [Ajax Crossorigin Request]: " + url);
+                                beef.mitb.sniff("GET [Ajax CrossOrigin Request]: " + url);
                                 window.open(url);
                             }else { //GET request -> same-origin
                                 beef.mitb.sniff("GET [Ajax Request]: " + url);

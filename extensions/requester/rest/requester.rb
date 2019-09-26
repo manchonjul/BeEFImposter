@@ -192,7 +192,7 @@ module BeEF
               :port => host_port,
               :path => uri,
               :request_date => Time.now,
-              :allow_cross-origin => "true",
+              :allow_cross_origin => "true",
             )
 
             if verb.eql?('POST') || verb.eql?('PUT')

@@ -36,7 +36,7 @@ module BeEF
 
               headers = socket_data.split("\r\n\r\n").first
               BeEF::Core::NetworkStack::Handlers::AssetHandler.instance.unbind_socket(socket_name)
-              print_info "[IPEC] cross-origin XmlHttpRequest headers size - received from bind socket [#{socket_name}]: #{headers.size + 4} bytes."
+              print_info "[IPEC] Cross-origin XmlHttpRequest headers size - received from bind socket [#{socket_name}]: #{headers.size + 4} bytes."
               # CRLF -> 4 bytes
               result['size'] = headers.size + 4
 

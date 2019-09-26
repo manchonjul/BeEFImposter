@@ -84,7 +84,7 @@ module BeEF
           # and finally sent to and executed by the hooked browser.
           def requester_parse_db_request(http_db_object)
 
-            allow_cross-origin = http_db_object.allow_cross-origin.to_s
+            allow_cross_origin = http_db_object.allow_cross_origin.to_s
             verb = http_db_object.method.upcase
             proto = http_db_object.proto.downcase
             uri = http_db_object.request.split(/\s+/)[1]
@@ -143,7 +143,7 @@ module BeEF
               'port'             => @port,
               'uri'              => uri,
               'headers'          => headers,
-              'allowCrossDomain' => allow_cross-origin
+              'allowCrossOrigin' => allow_cross_origin
             }
 
             # Add POST request data

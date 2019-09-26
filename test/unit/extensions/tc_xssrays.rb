@@ -39,7 +39,7 @@ class TC_XssRays < Test::Unit::TestCase
   def test_02_config
     assert(@@xssrays_config.has_key?('enable'))
     assert(@@xssrays_config.has_key?('clean_timeout'))
-    assert(@@xssrays_config.has_key?('cross-origin'))
+    assert(@@xssrays_config.has_key?('cross_origin'))
   end
 
   # Verifies public interface

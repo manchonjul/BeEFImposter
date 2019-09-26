@@ -49,8 +49,8 @@ beef.net.cors = {
             };
             xhr.send(data);
         }
-    } else if (typeof XoriginRequest != "undefined") {
-        xhr = new XoriginRequest();
+    } else if (typeof XOriginRequest != "undefined") {
+        xhr = new XOriginRequest();
         xhr.open(method, url);
         xhr.onerror = function() {
         };
