@@ -5,9 +5,9 @@ This is a collaboration I have created between the squid imposter framework and 
 
 To use:
 ------
-1.Clone this repo
-2.Install squid using
-$apt-get install squid
+1.Clone this repo<br>
+2.Install squid using<br>
+$apt-get install squid<br>
 3.cd into this repo
 $cd BeEFImposter
 4.Install beef framework
