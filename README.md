@@ -8,12 +8,12 @@ To use:
 1.Clone this repo<br>
 2.Install squid using<br>
 $apt-get install squid<br>
-3.cd into this repo
-$cd BeEFImposter
-4.Install beef framework
-$./install
-5.start beef
-./beef
+3.cd into this repo<br>
+$cd BeEFImposter<br>
+4.Install beef framework<br>
+$./install<br>
+5.start beef<br>
+./beef<br>
 
 MORE COMING SOON STILL -kinda- UNDER DEVELOPMENT PHASE
 
